@@ -1,5 +1,5 @@
 # Laravel SIMS
----
+
 ## Setting up environment when creating new laravel app
 
 1. Install `composer`
