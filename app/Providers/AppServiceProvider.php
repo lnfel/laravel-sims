@@ -14,9 +14,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         // Modify 
-        $this->app->bind('path.public', function() {
-            return base_path('../public_html/laravel-sims');
-        });
+        //$this->app->bind('path.public', function() {
+        //    return base_path('../public_html/laravel-sims');
+        //});
     }
 
     /**
