@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 
-Route::get('/', function() {
-	return view('login');
-});
+// Only return vie from routes if displaying static page
+// since data or functions on controller is not passed using this route method
+//Route::get('/', function() {
+	//return view('login');
+	//return view('tests/test');
+//});
+
+Route::get('/', 'Site@index');
+
+Route::get('/account', 'Account@index');
+Route::post('/account', 'Account@store');
