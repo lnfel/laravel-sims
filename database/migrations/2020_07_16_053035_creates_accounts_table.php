@@ -20,6 +20,7 @@ class CreatesAccountsTable extends Migration
             $table->string('type')->default('E');
             $table->integer('status')->default(1);
             $table->integer('theme')->default(3);
+            $table->rememberToken();
             $table->timestamps();
         });
     }

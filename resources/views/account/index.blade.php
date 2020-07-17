@@ -3,7 +3,7 @@
 @section('content')
 <h1 class="pl-4">Account tests</h1>
 
-<form class="pl-4" action="" method="post">
+<form class="pl-4" action="/account-test" method="post">
 	<input type="text" name="username" autocomplete="off">
 	@csrf
 	<input type="password" name="password">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class Account extends Controller
 {
@@ -25,13 +26,15 @@ class Account extends Controller
 
 		//dd($data);
 
-		// Laravel insert method
+		// Laravel insert method but without hashing method
 		//\App\Account::create($data);
 
 		$account = new \App\Account();
 
+		//$account->password = bcrypt(request('password'));
+
 		$account->username = request('username');
-		$account->password = bcrypt(request('password'));
+		$account->password = Hash::make(request('password'));
 		$account->type = "E";
 		$account->status = 1;
 		$account->theme = 3;
