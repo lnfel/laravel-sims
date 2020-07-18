@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\AccountResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +18,7 @@ class Account extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'password',
+        'username', 'email', 'password',
     ];
 
     /**
@@ -37,4 +38,8 @@ class Account extends Authenticatable
     protected $casts = [
         //'email_verified_at' => 'datetime',
     ];
+
+    public function sendPasswordResetNotification($token) {
+        $this->notify(new AccountResetPasswordNotification($token));
+    }
 }

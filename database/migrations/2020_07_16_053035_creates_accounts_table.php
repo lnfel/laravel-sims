@@ -17,6 +17,8 @@ class CreatesAccountsTable extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('type')->default('E');
             $table->integer('status')->default(1);
             $table->integer('theme')->default(3);

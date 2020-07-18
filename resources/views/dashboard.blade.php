@@ -32,11 +32,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
+                    {{ Auth::guard('account')->user()->username }}
                     {{ __('You are logged in!') }}
-                    <form action="{{ route('account.logout') }}" method="post">
-                        <button>Logout</button>
-                    </form>
                 </div>
             </div>
         </div>

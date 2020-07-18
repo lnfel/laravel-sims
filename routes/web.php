@@ -49,4 +49,10 @@ Route::prefix('account')->group(function() {
 	// Register routes
 	Route::get('/register', 'Auth\AccountRegisterController@showRegisterForm')->name('account.register');
 	Route::post('/register', 'Auth\AccountRegisterController@register')->name('account.register.submit');
+
+	// Password reset routes
+	Route::get('/password/reset', 'Auth\AccountForgotPasswordController@showLinkRequestForm')->name('account.password.request');
+  Route::post('/password/email', 'Auth\AccountForgotPasswordController@sendResetLinkEmail')->name('account.password.email');
+  Route::get('/password/reset/{token}', 'Auth\AccountResetPasswordController@showResetForm')->name('account.password.reset');
+  Route::post('/password/reset', 'Auth\AccountResetPasswordController@reset')->name('account.password.update');
 });
