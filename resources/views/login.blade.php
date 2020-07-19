@@ -78,7 +78,7 @@
                           <!-- Sign In Form -->
                           <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _es6/pages/op_auth_signin.js -->
                           <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-                          <form class="js-validation-signin px-30" action="be_pages_auth_all.html" method="post">
+                          <form class="js-validation-signin px-30" action="" method="post">
                               <div class="form-group row">
                                   <div class="col-12">
                                       <div class="form-material floating">

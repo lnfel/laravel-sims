@@ -38,7 +38,7 @@ class AccountRegisterController extends Controller
 
 			// Login the account
 			Auth::guard('account')->loginUsingId($account->id);
-			return redirect()->route('account.dashboard');
+			return redirect()->route('dashboard');
 		} catch (\Exception $e) {
 			return redirect()->back()->withInput($request->only('username', 'email'));
 		}

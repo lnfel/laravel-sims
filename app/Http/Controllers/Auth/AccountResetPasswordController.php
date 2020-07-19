@@ -29,7 +29,7 @@ class AccountResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/account';
+    protected $redirectTo = '/';
 
     protected function guard() {
         return Auth::guard('account');

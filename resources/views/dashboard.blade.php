@@ -2,12 +2,12 @@
 
 @section('content')
 @if(\Illuminate\Support\Facades\Auth::guard('account')->check())
-    <a href="{{ route('account.logout') }}"
+    <a href="{{ route('logout') }}"
             onclick="event.preventDefault();
             document.getElementById('logout-form').submit();">
         {{ __('Logout') }}
     </a>
-    <form id="logout-form" action="{{ route('account.logout') }}" method="post">
+    <form id="logout-form" action="{{ route('logout') }}" method="post">
         @csrf
     </form>
 @else
