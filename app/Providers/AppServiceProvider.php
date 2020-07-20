@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,13 @@ class AppServiceProvider extends ServiceProvider
         //$this->app->bind('path.public', function() {
         //    return base_path('../public_html/laravel-sims');
         //});
+
+
+        // Register TelescopeServiceProvider
+        if ($this->app->isLocal()) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**

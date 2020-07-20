@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class AccountLoginController extends Controller
 {
@@ -25,10 +26,15 @@ class AccountLoginController extends Controller
 			]
 		);*/
 
-		$data = $this->validate($request, [
+		$validator = Validator::make($request->all(), [
+	    'username' => 'required|string',
+			'password' => 'required|string',
+		])->validateWithBag('account');
+
+		/*$data = $this->validate($request, [
 			'username' => 'required|string',
 			'password' => 'required|string',
-		]);
+		]);*/
 
 		//dd($data);
 
@@ -39,7 +45,7 @@ class AccountLoginController extends Controller
 		}
 
 		// If unsuccessful then redirect back to login page with username and remember fields
-		return redirect()->back()->withInput($request->only('username', 'remember'));
+		return redirect()->back()->withInput($request->only('username', 'remember'))->withErrors($validator, 'account');
 	}
 
 	public function logout(Request $request) {
