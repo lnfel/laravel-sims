@@ -78,15 +78,7 @@
               <!-- Sign In Form -->
               <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _es6/pages/op_auth_signin.js -->
               <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-              @if ($errors->any())
-                <div class="alert alert-danger">
-                  <ul>
-                    @foreach ($errors->all() as $error)
-                      <li class="d-block mt-2">{{ $error }}</li>
-                    @endforeach
-                  </ul>
-                </div>
-              @endif
+              
               <form class="px-30" action="{{ route('login.submit') }}" method="POST">
                 @csrf
                 <div class="form-group row">
@@ -96,13 +88,10 @@
                       <label for="username">{{ __('Username') }}</label>
                     </div>
                     <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->account->first('username') }}</strong>
-                    </span>
-                    @error('username')
-                      <span class="invalid-feedback" role="alert">
+                      @error('username')
                         <strong>{{ $message }}</strong>
-                      </span>
-                    @enderror
+                      @enderror
+                    </span>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -111,11 +100,11 @@
                       <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" autocomplete="current-password">
                       <label for="password">Password</label>
                     </div>
-                    @error('password')
-                      <span class="invalid-feedback" role="alert">
+                    <span class="invalid-feedback" role="alert">
+                      @error('password')
                         <strong>{{ $message }}</strong>
-                      </span>
-                    @enderror
+                      @enderror
+                    </span>
                   </div>
                 </div>
                 <div class="form-group row">
