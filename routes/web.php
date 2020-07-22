@@ -33,7 +33,7 @@ Route::post('/account-test', 'Account@store');
 //Auth::routes(['register' => false]);
 //Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
-//Route::post('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+Route::post('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 //Route::prefix('account')->group(function() {
 	// Dashboard route
@@ -60,7 +60,7 @@ Route::post('/account-test', 'Account@store');
 // Refactored routes
 
 // Dashboard route
-Route::get('/', 'AccountController@index')->name('dashboard');
+Route::get('/', 'Dashboard@index')->name('dashboard');
 
 // Login routes
 Route::get('/login', 'Auth\AccountLoginController@showLoginForm')->name('login');
