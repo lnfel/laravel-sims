@@ -42,4 +42,9 @@ class Account extends Authenticatable
     public function sendPasswordResetNotification($token) {
         $this->notify(new AccountResetPasswordNotification($token));
     }
+
+    // define one-to-one relationship with AccountType model
+    public function account_type() {
+        return $this->belongsTo('App\AccountType')->withDefault();
+    }
 }

@@ -17,9 +17,10 @@ class CreatesAccountsTable extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->default('lnfel@gmail.com');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('type')->default('E');
+            $table->unsignedBigInteger('account_type_id')->default(1);
+            $table->foreign('account_type_id')->references('id')->on('account_types');
             $table->integer('status')->default(1);
             $table->integer('theme')->default(3);
             $table->rememberToken();
