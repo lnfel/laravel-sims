@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\AccountType;
+use Carbon\Carbon;
 
 class AccountTypeSeeder extends Seeder
 {
@@ -14,19 +15,21 @@ class AccountTypeSeeder extends Seeder
     {
     	// Remove all rows and reset the auto-incrementing ID to zero
     	AccountType::truncate();
+        // DateTime today
+        $now = Carbon::now('utc')->toDateTimeString();
 
     	$account_types = [
-    		['name' => 'Super Admin'],
-    		['name' => 'Administrator'],
-    		['name' => 'Employee'],
-    		['name' => 'Faculty Head'],
-    		['name' => 'Faculty'],
-    		['name' => 'HR'],
-    		['name' => 'IT'],
-    		['name' => 'Admission'],
-    		['name' => 'Registrar'],
-    		['name' => 'Guidance'],
-    		['name' => 'Student']
+    		['name' => 'Super Admin', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Administrator', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Employee', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Faculty Head', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Faculty', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'HR', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'IT', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Admission', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Registrar', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Guidance', 'created_at' => $now, 'updated_at' => $now],
+    		['name' => 'Student', 'created_at' => $now, 'updated_at' => $now]
     	];
 
     	AccountType::insert($account_types);

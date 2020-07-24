@@ -21,7 +21,8 @@ class CreatesAccountsTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->unsignedBigInteger('account_type_id')->default(1);
             $table->foreign('account_type_id')->references('id')->on('account_types');
-            $table->integer('status')->default(1);
+            $table->unsignedBigInteger('status_id')->default(1);
+            $table->foreign('status_id')->references('id')->on('statuses');
             $table->integer('theme')->default(3);
             $table->rememberToken();
             $table->timestamps();

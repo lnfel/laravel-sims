@@ -47,4 +47,8 @@ class Account extends Authenticatable
     public function account_type() {
         return $this->belongsTo('App\AccountType')->withDefault();
     }
+
+    public function status() {
+        return $this->belongsTo('App\Status')->withDefault();
+    }
 }
