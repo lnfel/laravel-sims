@@ -61,7 +61,7 @@
                 </a>
                 <ul class="list-inline mt-10">
                     <li class="list-inline-item">
-                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="be_pages_generic_profile.html">J. Smith</a>
+                        <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="be_pages_generic_profile.html">{{ $user->employee->last_name ? substr($user->employee->first_name, 0, 1) . '. ' . $user->employee->last_name : 'Unauthorized user' }}</a>
                     </li>
                     <li class="list-inline-item">
                         <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
@@ -85,8 +85,32 @@
         <div class="content-side content-side-full">
             <ul class="nav-main">
 				<li>
-					<a href="#"><i class="si si-cup"></i><span class="sidebar-mini-hide">Homepage</span></a>
+					<a href="/"><i class="si si-home"></i><span class="sidebar-mini-hide">Home</span></a>
 				</li>
+                <li class="nav-main-heading"> <!-- category marker -->
+                    <span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Admin</span>
+                </li>
+                <li>
+                    <a href="#"><i class="si si-people"></i><span class="sidebar-mini-hide">Account Management</span></a>
+                </li>
+                <li>
+                    <a class="nav-submenu" data-toggle="nav-submenu" href="#">
+                        <i class="si si-book-open"></i>
+                        <span class="sidebar-mini-hide">Data Entry</span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-mini-hide">Employee</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-mini-hide">Student</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 				<li class="nav-main-heading"> <!-- category marker -->
 					<span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Account Settings</span>
 				</li>
@@ -95,15 +119,6 @@
 				</li>
 				<li>
 					<a href="#"><i class="si si-moustache"></i><span class="sidebar-mini-hide">Settings</span></a>
-				</li>
-				<li class="nav-main-heading"> <!-- category marker -->
-					<span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Admin Powers</span>
-				</li>
-				<li>
-					<a href="#"><i class="si si-energy"></i><span class="sidebar-mini-hide">View All Account</span></a>
-				</li>
-				<li>
-					<a href="#"><i class="si si-note"></i><span class="sidebar-mini-hide">Modify Account</span></a>
 				</li>
 				<li class="nav-main-heading"> <!-- category marker -->
 					<span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Class Control</span>

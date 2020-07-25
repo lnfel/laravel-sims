@@ -51,4 +51,8 @@ class Account extends Authenticatable
     public function status() {
         return $this->belongsTo('App\Status')->withDefault();
     }
+
+    public function employee() {
+        return $this->belongsTo('App\Employee')->withDefault();
+    }
 }

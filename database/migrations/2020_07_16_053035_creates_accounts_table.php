@@ -19,6 +19,8 @@ class CreatesAccountsTable extends Migration
             $table->string('password');
             $table->string('email')->unique()->default('lnfel@gmail.com');
             $table->timestamp('email_verified_at')->nullable();
+            $table->unsignedBigInteger('employee_id')->unique();
+            $table->foreign('employee_id')->references('id')->on('employees');
             $table->unsignedBigInteger('account_type_id')->default(1);
             $table->foreign('account_type_id')->references('id')->on('account_types');
             $table->unsignedBigInteger('status_id')->default(1);

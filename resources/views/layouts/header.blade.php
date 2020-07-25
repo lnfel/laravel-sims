@@ -105,7 +105,7 @@
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user d-sm-none"></i>
-                    <span class="d-none d-sm-inline-block">J. Smith</span>
+                    <span class="d-none d-sm-inline-block">{{ $user ? substr($user->employee->first_name, 0, 1) . '. ' . $user->employee->last_name : 'Unauthorized user' }}</span>
                     <i class="fa fa-angle-down ml-5"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right min-width-200" aria-labelledby="page-header-user-dropdown">
@@ -130,9 +130,25 @@
                     <!-- END Side Overlay -->
 
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="op_auth_signin.html">
-                        <i class="si si-logout mr-5"></i> Sign Out
-                    </a>
+                    @if(\Illuminate\Support\Facades\Auth::guard('account')->check())
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                            <i class="si si-logout mr-5"></i> {{ __('Logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="post">
+                            @csrf
+                        </form>
+                    @else
+                        <a class="dropdown-item" href="{{ route('user.logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('user-logout-form').submit();">
+                            <i class="si si-logout mr-5"></i> {{ __('Logout') }}
+                        </a>
+                        <form id="user-logout-form" action="{{ route('user.logout') }}" method="post">
+                            @csrf
+                        </form>
+                    @endif
                 </div>
             </div>
             <!-- END User Dropdown -->

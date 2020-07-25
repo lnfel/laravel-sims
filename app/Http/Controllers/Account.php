@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Hash;
 class Account extends Controller
 {
   public function index() {
-  	// Get all Accounts
+  	// Get all Accounts and Employees
 		$accounts = \App\Account::all();
+		$employees = \App\Employee::all();
 		// Get all Account Type rows
 		$account_types = \App\AccountType::all();
 
@@ -42,7 +43,7 @@ class Account extends Controller
 		// Die and Dump data
 		//dd($accounts);
 
-		return view('account.index', compact('accounts', 'account_types', 'super_admin', 'accounts_on_type', 'last_username', 'new_username', 'status'));
+		return view('account.index', compact('accounts', 'employees', 'account_types', 'super_admin', 'accounts_on_type', 'last_username', 'new_username', 'status'));
 	}
 
 	public function store() {
@@ -51,7 +52,7 @@ class Account extends Controller
 			'password' => 'required',
 			'email' => 'required|email',
 			'account_type' => 'required',
-		]);
+		])->validateWithBag('account');
 
 		//dd($data);
 
@@ -73,6 +74,34 @@ class Account extends Controller
 		$account->theme = 3;
 		$account->save();
 		//dd(request('username'));
+
+		return redirect()->back()->withErrors($data, 'account');
+	}
+
+	public function storeEmployee() {
+		$dataEmployee = request()->validate([
+			'number' => 'required',
+			'first_name' => 'required|alpha',
+			'last_name' => 'required|alpha',
+			'middle_name' => 'required|alpha',
+			'employee_email' => 'required|email',
+		]);
+
+		$employee = new \App\Employee();
+		$employee->number = request('number');
+		$employee->first_name = request('first_name');
+		$employee->last_name = request('last_name');
+		$employee->middle_name = request('middle_name');
+		$employee->personal_email = request('employee_email');
+		$employee->save();
+
+		$account = new \App\Account();
+		$account->username = request('number');
+		$account->password = Hash::make('mmm');
+		$account->email = $employee->personal_email;
+		$account->employee()->associate($employee);
+		//$account->employee->save($employee);
+		$account->save();
 
 		return redirect()->back();
 	}

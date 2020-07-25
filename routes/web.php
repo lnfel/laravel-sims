@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/account-test', 'Account@index');
 Route::post('/account-test', 'Account@store');
+Route::post('/employee-test', 'Account@storeEmployee');
 
 // Routes for default login and register of laravel-ui
 //Auth::routes(['register' => false]);

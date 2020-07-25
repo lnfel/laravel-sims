@@ -16,25 +16,6 @@
     <!-- Hero -->
     <!-- Page Content -->
     <div class="content">
-        @if(\Illuminate\Support\Facades\Auth::guard('account')->check())
-            <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="post">
-                @csrf
-            </form>
-        @else
-            <a href="{{ route('user.logout') }}"
-                    onclick="event.preventDefault();
-                    document.getElementById('user-logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
-            <form id="user-logout-form" action="{{ route('user.logout') }}" method="post">
-                @csrf
-            </form>
-        @endif
         <div class="row">
             <div class="col">
                 <div class="card">
@@ -47,6 +28,7 @@
                         @endif
                         {{ Auth::guard('account')->user()->username }}
                         {{ __('You are logged in!') }}
+                        <pre>{{ var_dump($user->toArray()) }}</pre>
                     </div>
                 </div>
             </div>
