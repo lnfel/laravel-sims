@@ -28,4 +28,11 @@ class Dashboard extends Controller
 
     return view('dashboard', compact('user'));
   }
+
+  public function employee()
+  {
+    $user = Auth::user();
+    
+    return view('employee', compact('user'));
+  }
 }

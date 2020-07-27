@@ -15,6 +15,7 @@
   <!-- Stylesheets -->
 
   <!-- Page JS Plugins CSS -->
+  <link rel="stylesheet" href="{{ asset('codebase/assets/js/plugins/datatables/dataTables.bootstrap4.css') }}">
   <link rel="stylesheet" href="{{ asset('codebase/assets/js/plugins/fullcalendar/fullcalendar.min.css') }}">
   <link rel="stylesheet" href="{{ asset('codebase/assets/js/plugins/slick/slick.css') }}">
   <link rel="stylesheet" href="{{ asset('codebase/assets/js/plugins/slick/slick-theme.css') }}">
@@ -123,8 +124,11 @@
 	  <script src="{{ asset('codebase/assets/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('codebase/assets/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('codebase/assets/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 	  <!-- Page JS Code -->
 	  <script src="{{ asset('codebase/assets/js/pages/be_pages_dashboard.min.js') }}"></script>
+	  <script src="{{ asset('codebase/assets/js/pages/be_tables_datatables.min.js') }}"></script>
 </body>
 </html>
