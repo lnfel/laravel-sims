@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Employee;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class EmployeeSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
+      Schema::disableForeignKeyConstraints();
       // Remove all rows and reset the auto-incrementing ID to zero
     	Employee::truncate();
       // DateTime today
