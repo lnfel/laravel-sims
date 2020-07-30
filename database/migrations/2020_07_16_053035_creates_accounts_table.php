@@ -17,10 +17,14 @@ class CreatesAccountsTable extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->default('lnfel@gmail.com');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('type')->default('E');
-            $table->integer('status')->default(1);
+            $table->unsignedBigInteger('employee_id')->unique();
+            $table->foreign('employee_id')->references('id')->on('employees');
+            $table->unsignedBigInteger('account_type_id')->default(1);
+            $table->foreign('account_type_id')->references('id')->on('account_types');
+            $table->unsignedBigInteger('status_id')->default(1);
+            $table->foreign('status_id')->references('id')->on('statuses');
             $table->integer('theme')->default(3);
             $table->rememberToken();
             $table->timestamps();
@@ -34,6 +38,7 @@ class CreatesAccountsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('accounts');
     }
 }

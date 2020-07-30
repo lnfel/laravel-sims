@@ -38,7 +38,7 @@ class AccountLoginController extends Controller
 	    	'required',
 	    	'string',
 	    	Rule::exists('accounts')->where(function ($query) {
-            $query->where('status', 1);
+            $query->where('status_id', 1);
         })
 	    ],
 			'password' => [

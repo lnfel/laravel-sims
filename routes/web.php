@@ -28,12 +28,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/account-test', 'Account@index');
 Route::post('/account-test', 'Account@store');
+Route::post('/employee-test', 'Account@storeEmployee');
 
 // Routes for default login and register of laravel-ui
 //Auth::routes(['register' => false]);
 //Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
-//Route::post('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+Route::post('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 //Route::prefix('account')->group(function() {
 	// Dashboard route
@@ -60,7 +61,7 @@ Route::post('/account-test', 'Account@store');
 // Refactored routes
 
 // Dashboard route
-Route::get('/', 'AccountController@index')->name('dashboard');
+Route::get('/', 'Dashboard@index')->name('dashboard');
 
 // Login routes
 Route::get('/login', 'Auth\AccountLoginController@showLoginForm')->name('login');
@@ -78,3 +79,8 @@ Route::get('/password/reset', 'Auth\AccountForgotPasswordController@showLinkRequ
 Route::post('/password/email', 'Auth\AccountForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::get('/password/reset/{token}', 'Auth\AccountResetPasswordController@showResetForm')->name('password.reset');
 Route::post('/password/reset', 'Auth\AccountResetPasswordController@reset')->name('password.update');
+
+Route::get('/employee', 'Dashboard@employee')->name('dashboard.employee');
+Route::get('/dropdownlist/getprovinces/{id}', 'Dashboard@getProvinces');
+Route::get('/dropdownlist/getcities/{id}', 'Dashboard@getCities');
+Route::get('/dropdownlist/getbarangays/{id}', 'Dashboard@getBarangays');
