@@ -27,6 +27,7 @@ class CreateAccountTypesTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('account_types');
     }
 }

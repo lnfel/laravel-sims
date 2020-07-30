@@ -15,7 +15,7 @@
           </div>
 
           <div class="col-md py-10 d-md-flex align-items-md-center justify-content-md-end text-center">
-            <button type="button" class="btn btn-success btn-noborder">
+            <button type="button" class="btn btn-success btn-noborder" data-toggle="modal" data-target="#modal-slideup">
                 <i class="fa fa-user-plus mr-5"></i> New Employee
             </button>
           </div>
@@ -27,6 +27,8 @@
 	<!-- Page Content -->
   <div class="content">
   	<!-- Dynamic Table Full Pagination -->
+    {{-- $response->json() --}}
+    <span>Status: </span>{{-- $response->status() --}}
     <div class="block">
       <div class="block-header block-header-default">
           <h3 class="block-title">Dynamic Table <small>Full pagination</small></h3>
@@ -280,4 +282,121 @@
   </div>
   <!-- Page Content -->
 </main>
+<div class="modal fade" id="modal-slideup" tabindex="-1" role="dialog" aria-labelledby="modal-slideup" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-slideup" role="document">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent mb-0">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title"><i class="fa fa-user-plus mr-5"></i></h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="si si-close"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <form>
+                        <h5 class="mb-1">Personal Info</h5>
+                        <div class="form-group row mb-4">
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <input type="text" class="form-control" id="first_name" name="first_name">
+                                    <label for="first_name">Given Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <input type="text" class="form-control" id="middle_name" name="middle_name">
+                                    <label for="middle_name">Middle Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <input type="text" class="form-control" id="last_name" name="last_name">
+                                    <label for="last_name">Surname</label>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="mb-1">Address</h5>
+                        <div class="form-group row">
+                            <div class="col">
+                                <div class="form-material form-material-primary floating">
+                                    <input type="text" class="form-control" id="address" name="address">
+                                    <label for="address">Street address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <div class="form-material form-material-primary floating">
+                                    <select class="form-control" id="region" name="region">
+                                        @forelse($regions as $region)
+                                            <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
+                                        @empty
+                                            <option disabled="">{{ __('No regions found on database.') }}</option>
+                                        @endforelse
+                                    </select>
+                                    <label for="region">Region</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-material form-material-primary floating">
+                                    <select class="form-control" id="province" name="province" disabled="">
+                                        <option hidden="">-- Select Region first --</option>
+                                        <!-- @forelse($provinces as $province)
+                                            <option value="{{-- $province->province_code --}}">{{-- $province->province_description --}}</option>
+                                        @empty
+                                            <option disabled="">{{-- __('No provinces found on database.') --}}</option>
+                                        @endforelse -->
+                                    </select>
+                                    <label for="province">City / Province</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <select class="form-control" id="municipality" name="municipality" disabled="">
+                                        <option hidden="">-- Select Province first --</option>
+                                        <!-- @forelse($cities as $city)
+                                            <option value="{{-- $city->id --}}">{{-- $city->city_municipality_description --}}</option>
+                                        @empty
+                                            <option disabled="">{{-- __('No cities found on database.') --}}</option>
+                                        @endforelse -->
+                                    </select>
+                                    <label for="municipality">Municipality / City</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <select class="form-control" id="brgy" name="brgy" disabled="">
+                                        <option hidden="">-- Select a Municipality / City first --</option>
+                                        <!-- @forelse($barangays as $barangay)
+                                            <option value="{{-- $barangay->id --}}">{{-- $barangay->barangay_description --}}</option>
+                                        @empty
+                                            <option disabled="">{{-- __('No barangays found on database.') --}}</option>
+                                        @endforelse -->
+                                    </select>
+                                    <label for="brgy">Baranggay</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <input type="text" class="form-control" id="zip_code" name="zip_code">
+                                    <label for="zip_code">Zip Code</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-alt-success" data-dismiss="modal">
+                    <i class="fa fa-check"></i> Perfect
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

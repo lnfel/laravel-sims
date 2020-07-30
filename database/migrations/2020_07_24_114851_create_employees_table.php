@@ -27,6 +27,7 @@ class CreateEmployeesTable extends Migration
             $table->string('address')->default('#23 Bahay ni Kuya dyan sa may kanto');
             $table->string('brgy')->nullable();
             $table->string('municipality')->nullable();
+            $table->string('city')->nullable();
             $table->string('province')->nullable();
             $table->string('region')->nullable();
             $table->string('zip_code')->nullable();
@@ -64,6 +65,7 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('employees');
     }
 }

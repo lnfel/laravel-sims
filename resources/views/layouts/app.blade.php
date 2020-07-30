@@ -108,6 +108,7 @@
 	      codebase/assets/js/core/jquery.countTo.min.js
 	      codebase/assets/js/core/js.cookie.min.js
 	  -->
+	  <script src="{{ asset('codebase/assets/js/core/jquery.min.js') }}"></script>
 	  <script src="{{ asset('codebase/assets/js/codebase.core.min.js') }}"></script>
 
 	  <!--
@@ -130,5 +131,94 @@
 	  <!-- Page JS Code -->
 	  <script src="{{ asset('codebase/assets/js/pages/be_pages_dashboard.min.js') }}"></script>
 	  <script src="{{ asset('codebase/assets/js/pages/be_tables_datatables.min.js') }}"></script>
+
+	  <!-- Custom JS -->
+	  <script type="text/javascript">
+    $(document).ready(function()
+    {
+    	console.log("jQuery ready");
+    	// Get Province
+      $('select[name="region"]').on('change', function(){
+         var region_code = $(this).val();
+         console.log("Selected region: " + region_code);
+         if(region_code)
+         {
+            $.ajax({
+               url : '/dropdownlist/getprovinces/' + region_code,
+               type : "GET",
+               dataType : "json",
+               success:function(data)
+               {
+                  console.log(data);
+                  $('select[name="province"]').prop('disabled', false);
+                  $('select[name="province"]').empty();
+                  $.each(data, function(key, value){
+                     $('select[name="province"]').append('<option value="'+ key +'">'+ value +'</option>');
+                  });
+               }
+            });
+         }
+         else
+         {
+            $('select[name="province"]').empty();
+            $('select[name="province"]').prop('disabled', 'disabled');
+         }
+      });
+      // Get Municipality / City
+      $('select[name="province"]').on('change', function(){
+         var province_code = $(this).val();
+         console.log("Selected province: " + province_code);
+         if(province_code)
+         {
+            $.ajax({
+               url : '/dropdownlist/getcities/' + province_code,
+               type : "GET",
+               dataType : "json",
+               success:function(data)
+               {
+                  console.log(data);
+                  $('select[name="municipality"]').prop('disabled', false);
+                  $('select[name="municipality"]').empty();
+                  $.each(data, function(key, value){
+                     $('select[name="municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
+                  });
+               }
+            });
+         }
+         else
+         {
+            $('select[name="municipality"]').empty();
+            $('select[name="municipality"]').prop('disabled', 'disabled');
+         }
+      });
+      // Get Barangays
+      $('select[name="municipality"]').on('change', function(){
+         var municipality_code = $(this).val();
+         console.log("Selected municipality / city: " + municipality_code);
+         if(municipality_code)
+         {
+            $.ajax({
+               url : '/dropdownlist/getbarangays/' + municipality_code,
+               type : "GET",
+               dataType : "json",
+               success:function(data)
+               {
+                  console.log(data);
+                  $('select[name="brgy"]').prop('disabled', false);
+                  $('select[name="brgy"]').empty();
+                  $.each(data, function(key, value){
+                     $('select[name="brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
+                  });
+               }
+            });
+         }
+         else
+         {
+            $('select[name="brgy"]').empty();
+            $('select[name="brgy"]').prop('disabled', 'disabled');
+         }
+      });
+    });
+    </script>
 </body>
 </html>
