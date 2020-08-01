@@ -101,7 +101,7 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="{{ route('dashboard.employee') }}">
+                            <a href="{{ route('employees.index') }}">
                                 <span class="sidebar-mini-hide">Employee</span>
                             </a>
                         </li>

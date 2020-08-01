@@ -33,38 +33,7 @@ class Dashboard extends Controller
 
   public function employee()
   {
-    // Check if a record exists on accounts table
-    $exists = \App\Account::exists();
-
-    if ($exists) {
-      // Get latest or last username created
-      $last_username = \App\Account::latest('created_at')->first()->username;
-      // Increment last username value
-      // Note that php already coerce string to int conversion when doing this
-      // In cases we want to explicitly convert the type:
-      // we can cast it Ex. (int)$last_username 
-      $new_username = $last_username + 1;
-    } else {
-      $last_username = null;
-      $new_username = null;
-    }
-
-    $user = Auth::user();
-    if ($user->isAdmin()) {
-      $account_types = \App\AccountType::get();
-    } else {
-      $account_types = \App\AccountType::whereNotIn('name', ['Super Admin', 'Administrator'])->get();
-    }
-
-    //$response = Http::get('http://bkintanar.site/api/regions');
-
-    $regions = DB::table('philippine_regions')->get();
-    //$provinces = DB::table('philippine_provinces')->get();
-    //$cities = DB::table('philippine_cities')->get();
-    //$barangays = DB::table('philippine_barangays')->get();
-    //, 'provinces', 'cities', 'barangays'
-    
-    return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types'));
+    // moved to Employee.php
   }
 
   public function getProvinces($region_code)

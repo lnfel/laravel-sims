@@ -80,8 +80,12 @@ Route::post('/password/email', 'Auth\AccountForgotPasswordController@sendResetLi
 Route::get('/password/reset/{token}', 'Auth\AccountResetPasswordController@showResetForm')->name('password.reset');
 Route::post('/password/reset', 'Auth\AccountResetPasswordController@reset')->name('password.update');
 
-Route::get('/employee', 'Dashboard@employee')->name('dashboard.employee');
-Route::post('/employee/store', 'Account@storeEmployee')->name('dashboard.employee.store');
+//Route::get('/employee', 'Dashboard@employee')->name('dashboard.employee');
+//Route::post('/employee/store', 'Account@storeEmployee')->name('dashboard.employee.store');
 Route::get('/dropdownlist/getprovinces/{id}', 'Dashboard@getProvinces');
 Route::get('/dropdownlist/getcities/{id}', 'Dashboard@getCities');
 Route::get('/dropdownlist/getbarangays/{id}', 'Dashboard@getBarangays');
+
+Route::resources([
+  'employees' => 'Employee',
+]);

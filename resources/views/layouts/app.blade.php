@@ -27,6 +27,15 @@
   <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
   <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
   <!-- END Stylesheets -->
+  <style type="text/css">
+    .form-material.form-error .form-control {
+      box-shadow: 0 1px 0 #db4343;
+    }
+
+    .form-material.form-error label {
+      color: #db4343;
+    }
+  </style>
 </head>
 <body>
 	@auth
@@ -152,6 +161,7 @@
                   console.log(data);
                   $('select[name="province"]').prop('disabled', false);
                   $('select[name="province"]').empty();
+                  $('select[name="province"]').append('<option hidden>-- Provinces loaded --</option>');
                   $.each(data, function(key, value){
                      $('select[name="province"]').append('<option value="'+ key +'">'+ value +'</option>');
                   });
@@ -179,6 +189,7 @@
                   console.log(data);
                   $('select[name="municipality"]').prop('disabled', false);
                   $('select[name="municipality"]').empty();
+                  $('select[name="municipality"]').append('<option hidden>-- Cities and Municipality loaded --</option>');
                   $.each(data, function(key, value){
                      $('select[name="municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
                   });
@@ -206,6 +217,7 @@
                   console.log(data);
                   $('select[name="brgy"]').prop('disabled', false);
                   $('select[name="brgy"]').empty();
+                  $('select[name="brgy"]').append('<option hidden>-- Baranggays loaded --</option>');
                   $.each(data, function(key, value){
                      $('select[name="brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
                   });
@@ -217,6 +229,10 @@
             $('select[name="brgy"]').empty();
             $('select[name="brgy"]').prop('disabled', 'disabled');
          }
+      });
+
+      $('.form-error').on('change', function() {
+        $(this).removeClass('form-error').children('span').html("");
       });
     });
     </script>

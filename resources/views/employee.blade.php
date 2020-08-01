@@ -295,7 +295,7 @@
                     </div>
                 </div>
                 <div class="block-content">
-                    <form id="employee" action="/employee/store" method="post">
+                    <form id="employee" action="{{ route('employees.store') }}" method="post">
                         @csrf
                         <h5 class="mb-1">Account Info</h5>
                         <div class="form-group row mb-4">
@@ -306,9 +306,9 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
+                                <div class="form-material form-material-primary {{($errors->first('account_type') ? ' form-error' : '')}} floating">
                                     <select class="form-control" id="account_type" name="account_type">
-                                        <option hidden="">-- Select Role --</option>
+                                        <option hidden="" value="0">-- Select Role --</option>
                                         @forelse($account_types as $type)
                                             <option value="{{ $type->id }}">{{ $type->name }}</option>
                                         @empty
@@ -316,43 +316,48 @@
                                         @endforelse
                                     </select>
                                     <label for="region">Account Type</label>
+                                    <span class="invalid-feedback" role="alert">
+                                      @error('account_type')
+                                        <strong>{{ $message }}</strong>
+                                      @enderror
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <h5 class="mb-1">Personal Info</h5>
                         <div class="form-group row mb-4">
                             <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
+                                <div class="form-material form-material-primary {{($errors->first('first_name') ? ' form-error' : '')}} floating">
                                     <input type="text" class="form-control" id="first_name" name="first_name">
                                     <label for="first_name">First Name</label>
+                                    <span class="invalid-feedback" role="alert">
+                                      @error('first_name')
+                                        <strong>{{ $message }}</strong>
+                                      @enderror
+                                    </span>
                                 </div>
-                                <span class="invalid-feedback" role="alert">
-                                  @error('first_name')
-                                    <strong>{{ $message }}</strong>
-                                  @enderror
-                                </span>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
+                                <div class="form-material form-material-primary {{($errors->first('middle_name') ? ' form-error' : '')}} floating">
                                     <input type="text" class="form-control" id="middle_name" name="middle_name">
                                     <label for="middle_name">Middle Name</label>
+                                    <span class="invalid-feedback" role="alert">
+                                      @error('middle_name')
+                                        <strong>{{ $message }}</strong>
+                                      @enderror
+                                    </span>
                                 </div>
-                                <span class="invalid-feedback" role="alert">
-                                  @error('middle_name')
-                                    <strong>{{ $message }}</strong>
-                                  @enderror
-                                </span>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
+                                <div class="form-material form-material-primary {{($errors->first('last_name') ? ' form-error' : '')}} floating">
                                     <input type="text" class="form-control" id="last_name" name="last_name">
                                     <label for="last_name">Last Name</label>
+                                    <span class="invalid-feedback" role="alert">
+                                      @error('last_name')
+                                        <strong>{{ $message }}</strong>
+                                      @enderror
+                                    </span>
                                 </div>
-                                <span class="invalid-feedback" role="alert">
-                                  @error('last_name')
-                                    <strong>{{ $message }}</strong>
-                                  @enderror
-                                </span>
                             </div>
                         </div>
                         <h5 class="mb-1">Address</h5>
@@ -383,7 +388,7 @@
                                     <select class="form-control" id="province" name="province" disabled="">
                                         <option hidden="">-- Select Region first --</option>
                                     </select>
-                                    <label for="province">City / Province</label>
+                                    <label for="province">Province</label>
                                 </div>
                             </div>
                         </div>
