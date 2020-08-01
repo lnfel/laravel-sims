@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class AccountSeeder extends Seeder
 {
@@ -14,6 +15,7 @@ class AccountSeeder extends Seeder
      */
     public function run()
     {
+      Schema::disableForeignKeyConstraints();
 			// Remove all rows and reset the auto-incrementing ID to zero
     	Account::truncate();
       // DateTime today

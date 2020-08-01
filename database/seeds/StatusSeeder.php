@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Status;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class StatusSeeder extends Seeder
 {
@@ -13,7 +14,8 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-      // Remove all rows and reset the auto-incrementing ID to zero
+        Schema::disableForeignKeyConstraints();
+        // Remove all rows and reset the auto-incrementing ID to zero
     	Status::truncate();
         // DateTime today
         $now = Carbon::now('utc')->toDateTimeString();
