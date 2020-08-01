@@ -295,26 +295,64 @@
                     </div>
                 </div>
                 <div class="block-content">
-                    <form>
+                    <form id="employee" action="/employee/store" method="post">
+                        @csrf
+                        <h5 class="mb-1">Account Info</h5>
+                        <div class="form-group row mb-4">
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <input id="number" type="text" class="form-control" name="number" value="{{ $new_username ?? date('Ymd').'01' }}" readonly="" style="background-color: #f0f2f5;">
+                                    <label for="number">Employee and Account number</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-material form-material-primary floating">
+                                    <select class="form-control" id="account_type" name="account_type">
+                                        <option hidden="">-- Select Role --</option>
+                                        @forelse($account_types as $type)
+                                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                        @empty
+                                            <option disabled="">{{ __('No account types found on database.') }}</option>
+                                        @endforelse
+                                    </select>
+                                    <label for="region">Account Type</label>
+                                </div>
+                            </div>
+                        </div>
                         <h5 class="mb-1">Personal Info</h5>
                         <div class="form-group row mb-4">
                             <div class="col-md-4">
                                 <div class="form-material form-material-primary floating">
                                     <input type="text" class="form-control" id="first_name" name="first_name">
-                                    <label for="first_name">Given Name</label>
+                                    <label for="first_name">First Name</label>
                                 </div>
+                                <span class="invalid-feedback" role="alert">
+                                  @error('first_name')
+                                    <strong>{{ $message }}</strong>
+                                  @enderror
+                                </span>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-material form-material-primary floating">
                                     <input type="text" class="form-control" id="middle_name" name="middle_name">
                                     <label for="middle_name">Middle Name</label>
                                 </div>
+                                <span class="invalid-feedback" role="alert">
+                                  @error('middle_name')
+                                    <strong>{{ $message }}</strong>
+                                  @enderror
+                                </span>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-material form-material-primary floating">
                                     <input type="text" class="form-control" id="last_name" name="last_name">
-                                    <label for="last_name">Surname</label>
+                                    <label for="last_name">Last Name</label>
                                 </div>
+                                <span class="invalid-feedback" role="alert">
+                                  @error('last_name')
+                                    <strong>{{ $message }}</strong>
+                                  @enderror
+                                </span>
                             </div>
                         </div>
                         <h5 class="mb-1">Address</h5>
@@ -377,9 +415,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-alt-success" data-dismiss="modal">
-                    <i class="fa fa-check"></i> Perfect
+                <button form="employee" class="btn btn-success btn-noborder">
+                    Register
                 </button>
             </div>
         </div>

@@ -220,5 +220,12 @@
       });
     });
     </script>
+
+    @if (count($errors) > 0)
+      <script type="text/javascript">
+        // Keep modal open if there are errors
+        $('#modal-slideup').modal('show');
+      </script>
+    @endif
 </body>
 </html>
