@@ -38,11 +38,12 @@ class Dashboard extends Controller
     //$response = Http::get('http://bkintanar.site/api/regions');
 
     $regions = DB::table('philippine_regions')->get();
-    $provinces = DB::table('philippine_provinces')->get();
-    $cities = DB::table('philippine_cities')->get();
-    $barangays = DB::table('philippine_barangays')->get();
+    //$provinces = DB::table('philippine_provinces')->get();
+    //$cities = DB::table('philippine_cities')->get();
+    //$barangays = DB::table('philippine_barangays')->get();
+    //, 'provinces', 'cities', 'barangays'
     
-    return view('employee', compact('user', 'regions', 'provinces', 'cities', 'barangays'));
+    return view('employee', compact('user', 'regions'));
   }
 
   public function getProvinces($region_code)

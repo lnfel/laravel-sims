@@ -87,6 +87,7 @@
 				<li>
 					<a href="/"><i class="si si-home"></i><span class="sidebar-mini-hide">Home</span></a>
 				</li>
+                @if(Auth::guard('account')->user()->isAdmin())
                 <li class="nav-main-heading"> <!-- category marker -->
                     <span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Admin</span>
                 </li>
@@ -100,7 +101,7 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('dashboard.employee') }}">
                                 <span class="sidebar-mini-hide">Employee</span>
                             </a>
                         </li>
@@ -111,6 +112,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
 				<li class="nav-main-heading"> <!-- category marker -->
 					<span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Account Settings</span>
 				</li>

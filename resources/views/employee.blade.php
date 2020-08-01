@@ -330,6 +330,7 @@
                             <div class="col-md-6">
                                 <div class="form-material form-material-primary floating">
                                     <select class="form-control" id="region" name="region">
+                                        <option hidden="">-- Choose Region --</option>
                                         @forelse($regions as $region)
                                             <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
                                         @empty
@@ -343,11 +344,6 @@
                                 <div class="form-material form-material-primary floating">
                                     <select class="form-control" id="province" name="province" disabled="">
                                         <option hidden="">-- Select Region first --</option>
-                                        <!-- @forelse($provinces as $province)
-                                            <option value="{{-- $province->province_code --}}">{{-- $province->province_description --}}</option>
-                                        @empty
-                                            <option disabled="">{{-- __('No provinces found on database.') --}}</option>
-                                        @endforelse -->
                                     </select>
                                     <label for="province">City / Province</label>
                                 </div>
@@ -358,11 +354,6 @@
                                 <div class="form-material form-material-primary floating">
                                     <select class="form-control" id="municipality" name="municipality" disabled="">
                                         <option hidden="">-- Select Province first --</option>
-                                        <!-- @forelse($cities as $city)
-                                            <option value="{{-- $city->id --}}">{{-- $city->city_municipality_description --}}</option>
-                                        @empty
-                                            <option disabled="">{{-- __('No cities found on database.') --}}</option>
-                                        @endforelse -->
                                     </select>
                                     <label for="municipality">Municipality / City</label>
                                 </div>
@@ -371,11 +362,6 @@
                                 <div class="form-material form-material-primary floating">
                                     <select class="form-control" id="brgy" name="brgy" disabled="">
                                         <option hidden="">-- Select a Municipality / City first --</option>
-                                        <!-- @forelse($barangays as $barangay)
-                                            <option value="{{-- $barangay->id --}}">{{-- $barangay->barangay_description --}}</option>
-                                        @empty
-                                            <option disabled="">{{-- __('No barangays found on database.') --}}</option>
-                                        @endforelse -->
                                     </select>
                                     <label for="brgy">Baranggay</label>
                                 </div>

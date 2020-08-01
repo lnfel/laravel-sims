@@ -55,4 +55,9 @@ class Account extends Authenticatable
     public function employee() {
         return $this->belongsTo('App\Employee')->withDefault();
     }
+
+    // check if logged in user is an Admin
+    public function isAdmin() {
+        return $this->account_type()->where('name', 'Super Admin')->exists();
+    }
 }
