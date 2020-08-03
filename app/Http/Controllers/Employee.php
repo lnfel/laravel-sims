@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Employee as EmployeeModel;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Validator;
 
 class Employee extends Controller
 {
@@ -28,9 +30,10 @@ class Employee extends Controller
     public function index()
     {
         // Check if a record exists on accounts table
-        $exists = \App\Account::exists();
+        $accountExists = \App\Account::exists();
+        $employeeExists = \App\Employee::exists();
 
-        if ($exists) {
+        if ($accountExists) {
           // Get latest or last username created
           $last_username = \App\Account::latest('created_at')->first()->username;
           // Increment last username value
@@ -57,8 +60,14 @@ class Employee extends Controller
         //$cities = DB::table('philippine_cities')->get();
         //$barangays = DB::table('philippine_barangays')->get();
         //, 'provinces', 'cities', 'barangays'
+
+        if ($employeeExists) {
+            $employees = \App\Employee::get();
+        }
+
+        $employee = [];
         
-        return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types'));
+        return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types', 'employee', 'employees'));
     }
 
     /**
@@ -79,7 +88,7 @@ class Employee extends Controller
      */
     public function store(Request $request)
     {
-        $dataEmployee = request()->validate([
+        /*$dataEmployee = request()->validate([
             'number' => 'required',
             'account_type' => [
                 'required',
@@ -89,14 +98,26 @@ class Employee extends Controller
             'last_name' => 'required|alpha',
             'middle_name' => 'required|alpha',
             'employee_email' => 'required|email',
-        ]);
+        ]);*/
 
-        $employee = new \App\EmployeeModel();
+        $validator = Validator::make($request->all(), [
+            'number' => 'required',
+            'account_type' => [
+                'required',
+                Rule::notIn([0]),
+            ],
+            'first_name' => 'required|alpha',
+            'last_name' => 'required|alpha',
+            'middle_name' => 'required|alpha',
+            'personal_email' => 'required|email',
+        ])->validateWithBag('storeEmployee');
+
+        $employee = new \App\Employee();
         $employee->number = request('number');
         $employee->first_name = request('first_name');
         $employee->last_name = request('last_name');
         $employee->middle_name = request('middle_name');
-        $employee->personal_email = request('employee_email');
+        $employee->personal_email = request('personal_email');
         $employee->save();
 
         $account = new \App\Account();
@@ -107,7 +128,7 @@ class Employee extends Controller
         //$account->employee->save($employee);
         $account->save();
 
-        return redirect()->back();
+        return redirect()->back()->withErrors($validator, 'storeEmployee');
     }
 
     /**
@@ -127,9 +148,13 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employee $employee)
+    public function edit($employee)
     {
-        //
+        $data = [];
+        $data['employee'] = \App\Employee::where('number', $employee)->get()->toArray();
+        $data['account'] = \App\Account::where('employee_id', $data['employee'][0]['id'])->get()->toArray();
+
+        return json_encode($data);
     }
 
     /**

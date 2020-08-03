@@ -15,7 +15,7 @@
           </div>
 
           <div class="col-md py-10 d-md-flex align-items-md-center justify-content-md-end text-center">
-            <button type="button" class="btn btn-success btn-noborder" data-toggle="modal" data-target="#modal-slideup">
+            <button type="button" class="btn btn-success btn-noborder" data-toggle="modal" data-target="#store-employee">
                 <i class="fa fa-user-plus mr-5"></i> New Employee
             </button>
           </div>
@@ -38,7 +38,7 @@
         <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
           <thead>
             <tr>
-              <th class="text-center"></th>
+              <th class="text-center">Employee number</th>
               <th>Name</th>
               <th class="d-none d-sm-table-cell">Email</th>
               <th class="d-none d-sm-table-cell" style="width: 15%;">Access</th>
@@ -46,217 +46,28 @@
             </tr>
           </thead>
           <tbody>
+            @forelse($employees as $e)
           	<tr>
-                <td class="text-center">{{ Auth::guard('account')->user()->id }}</td>
-                <td class="font-w600"><a href="#">{{ Auth::guard('account')->user()->employee->first_name }}</a></td>
-                <td class="d-none d-sm-table-cell">{{ Auth::guard('account')->user()->email }}</td>
+                <td class="text-center">{{ $e->number }}</td>
+                <td class="font-w600"><a href="#">{{ $e->first_name }}</a></td>
+                <td class="d-none d-sm-table-cell">{{ $e->personal_email }}</td>
                 <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">{{ Auth::guard('account')->user()->status->name }}</span>
+                    <span class="badge badge-success">{{ $e->account->status->name }}</span>
                 </td>
                 <td class="text-center">
-                	<button type="button" class="btn btn-primary mr-5 mb-5">
-                    <i class="fa fa-edit"></i>
-                  </button>
+                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $e->number }}" data-target="#update-employee">
+                        <i class="fa fa-edit"></i>
+                    </button>
                 	<button type="button" class="btn btn-danger mr-5 mb-5">
-                    <i class="fa fa-times"></i>
-                  </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">1</td>
-                <td class="font-w600">Ryan Flores</td>
-                <td class="d-none d-sm-table-cell">customer1@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">VIP</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
+                        <i class="fa fa-times"></i>
                     </button>
                 </td>
             </tr>
+            @empty
             <tr>
-                <td class="text-center">2</td>
-                <td class="font-w600">Carol Ray</td>
-                <td class="d-none d-sm-table-cell">customer2@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-info">Business</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
+                <td>{{ __('No employees found on database.') }}</td>
             </tr>
-            <tr>
-                <td class="text-center">3</td>
-                <td class="font-w600">Carol Ray</td>
-                <td class="d-none d-sm-table-cell">customer3@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-primary">Personal</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">4</td>
-                <td class="font-w600">Marie Duncan</td>
-                <td class="d-none d-sm-table-cell">customer4@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-warning">Trial</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">5</td>
-                <td class="font-w600">Amanda Powell</td>
-                <td class="d-none d-sm-table-cell">customer5@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-danger">Disabled</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">6</td>
-                <td class="font-w600">Jeffrey Shaw</td>
-                <td class="d-none d-sm-table-cell">customer6@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">VIP</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">7</td>
-                <td class="font-w600">Lori Grant</td>
-                <td class="d-none d-sm-table-cell">customer7@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-danger">Disabled</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">8</td>
-                <td class="font-w600">Andrea Gardner</td>
-                <td class="d-none d-sm-table-cell">customer8@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-warning">Trial</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">9</td>
-                <td class="font-w600">Sara Fields</td>
-                <td class="d-none d-sm-table-cell">customer9@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">VIP</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">10</td>
-                <td class="font-w600">Marie Duncan</td>
-                <td class="d-none d-sm-table-cell">customer10@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-danger">Disabled</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">11</td>
-                <td class="font-w600">Sara Fields</td>
-                <td class="d-none d-sm-table-cell">customer11@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">VIP</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">12</td>
-                <td class="font-w600">Brian Cruz</td>
-                <td class="d-none d-sm-table-cell">customer12@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-info">Business</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">13</td>
-                <td class="font-w600">Jose Parker</td>
-                <td class="d-none d-sm-table-cell">customer13@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-danger">Disabled</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">14</td>
-                <td class="font-w600">Brian Cruz</td>
-                <td class="d-none d-sm-table-cell">customer14@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-info">Business</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td class="text-center">15</td>
-                <td class="font-w600">Jesse Fisher</td>
-                <td class="d-none d-sm-table-cell">customer15@example.com</td>
-                <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-primary">Personal</span>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                        <i class="fa fa-user"></i>
-                    </button>
-                </td>
-            </tr>
+            @endforelse
           </tbody>
         </table>
       </div>
@@ -282,149 +93,172 @@
   </div>
   <!-- Page Content -->
 </main>
-<div class="modal fade" id="modal-slideup" tabindex="-1" role="dialog" aria-labelledby="modal-slideup" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-slideup" role="document">
-        <div class="modal-content">
-            <div class="block block-themed block-transparent mb-0">
-                <div class="block-header bg-primary-dark">
-                    <h3 class="block-title"><i class="fa fa-user-plus mr-5"></i></h3>
-                    <div class="block-options">
-                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
-                            <i class="si si-close"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="block-content">
-                    <form id="employee" action="{{ route('employees.store') }}" method="post">
-                        @csrf
-                        <h5 class="mb-1">Account Info</h5>
-                        <div class="form-group row mb-4">
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
-                                    <input id="number" type="text" class="form-control" name="number" value="{{ $new_username ?? date('Ymd').'01' }}" readonly="" style="background-color: #f0f2f5;">
-                                    <label for="number">Employee and Account number</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary {{($errors->first('account_type') ? ' form-error' : '')}} floating">
-                                    <select class="form-control" id="account_type" name="account_type">
-                                        <option hidden="" value="0">-- Select Role --</option>
-                                        @forelse($account_types as $type)
-                                            <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                        @empty
-                                            <option disabled="">{{ __('No account types found on database.') }}</option>
-                                        @endforelse
-                                    </select>
-                                    <label for="region">Account Type</label>
-                                    <span class="invalid-feedback" role="alert">
-                                      @error('account_type')
-                                        <strong>{{ $message }}</strong>
-                                      @enderror
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <h5 class="mb-1">Personal Info</h5>
-                        <div class="form-group row mb-4">
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary {{($errors->first('first_name') ? ' form-error' : '')}} floating">
-                                    <input type="text" class="form-control" id="first_name" name="first_name">
-                                    <label for="first_name">First Name</label>
-                                    <span class="invalid-feedback" role="alert">
-                                      @error('first_name')
-                                        <strong>{{ $message }}</strong>
-                                      @enderror
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary {{($errors->first('middle_name') ? ' form-error' : '')}} floating">
-                                    <input type="text" class="form-control" id="middle_name" name="middle_name">
-                                    <label for="middle_name">Middle Name</label>
-                                    <span class="invalid-feedback" role="alert">
-                                      @error('middle_name')
-                                        <strong>{{ $message }}</strong>
-                                      @enderror
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary {{($errors->first('last_name') ? ' form-error' : '')}} floating">
-                                    <input type="text" class="form-control" id="last_name" name="last_name">
-                                    <label for="last_name">Last Name</label>
-                                    <span class="invalid-feedback" role="alert">
-                                      @error('last_name')
-                                        <strong>{{ $message }}</strong>
-                                      @enderror
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <h5 class="mb-1">Address</h5>
-                        <div class="form-group row">
-                            <div class="col">
-                                <div class="form-material form-material-primary floating">
-                                    <input type="text" class="form-control" id="address" name="address">
-                                    <label for="address">Street address</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <div class="form-material form-material-primary floating">
-                                    <select class="form-control" id="region" name="region">
-                                        <option hidden="">-- Choose Region --</option>
-                                        @forelse($regions as $region)
-                                            <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
-                                        @empty
-                                            <option disabled="">{{ __('No regions found on database.') }}</option>
-                                        @endforelse
-                                    </select>
-                                    <label for="region">Region</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-material form-material-primary floating">
-                                    <select class="form-control" id="province" name="province" disabled="">
-                                        <option hidden="">-- Select Region first --</option>
-                                    </select>
-                                    <label for="province">Province</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
-                                    <select class="form-control" id="municipality" name="municipality" disabled="">
-                                        <option hidden="">-- Select Province first --</option>
-                                    </select>
-                                    <label for="municipality">Municipality / City</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
-                                    <select class="form-control" id="brgy" name="brgy" disabled="">
-                                        <option hidden="">-- Select a Municipality / City first --</option>
-                                    </select>
-                                    <label for="brgy">Baranggay</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-material form-material-primary floating">
-                                    <input type="text" class="form-control" id="zip_code" name="zip_code">
-                                    <label for="zip_code">Zip Code</label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+<!-- Store Employee Modal -->
+<x-modal icon="fa fa-user-plus mr-5" title="New Employee" modalId="store-employee" formId="create-employee">
+    <form id="create-employee" action="{{ route('employees.store') }}" method="post">
+        @csrf
+        <h5 class="mb-1">Account Info</h5>
+        <div class="form-group row mb-4">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <input id="number" type="text" class="form-control" name="number" value="{{ $new_username ?? date('Ymd').'01' }}" readonly="" style="background-color: #f0f2f5;">
+                    <label for="number">Employee and Account number</label>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button form="employee" class="btn btn-success btn-noborder">
-                    Register
-                </button>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="account_type" name="account_type">
+                        <option hidden="" value="0">-- Select Role --</option>
+                        @forelse($account_types as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @empty
+                            <option disabled="">{{ __('No account types found on database.') }}</option>
+                        @endforelse
+                    </select>
+                    <label for="region">Account Type</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('account_type') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error store' : '')}} floating">
+                    <input id="personal_email" type="email" name="personal_email" class="form-control">
+                    <label for="personal_email">Email</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+        <h5 class="mb-1">Personal Info</h5>
+        <div class="form-group row mb-4">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="first_name" name="first_name">
+                    <label for="first_name">First Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('first_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error' : '')}} floating">
+                    <input type="text" class="form-control" id="middle_name" name="middle_name">
+                    <label for="middle_name">Middle Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('middle_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error' : '')}} floating">
+                    <input type="text" class="form-control" id="last_name" name="last_name">
+                    <label for="last_name">Last Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('last_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <h5 class="mb-1">Address</h5>
+        <div class="form-group row">
+            <div class="col">
+                <div class="form-material form-material-primary floating">
+                    <input type="text" class="form-control" id="address" name="address">
+                    <label for="address">Street address</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <div class="form-material form-material-primary floating">
+                    <select class="form-control" id="region" name="region">
+                        <option hidden="">-- Choose Region --</option>
+                        @forelse($regions as $region)
+                            <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
+                        @empty
+                            <option disabled="">{{ __('No regions found on database.') }}</option>
+                        @endforelse
+                    </select>
+                    <label for="region">Region</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-material form-material-primary floating">
+                    <select class="form-control" id="province" name="province" disabled="">
+                        <option hidden="">-- Select Region first --</option>
+                    </select>
+                    <label for="province">Province</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <select class="form-control" id="municipality" name="municipality" disabled="">
+                        <option hidden="">-- Select Province first --</option>
+                    </select>
+                    <label for="municipality">Municipality / City</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <select class="form-control" id="brgy" name="brgy" disabled="">
+                        <option hidden="">-- Select a Municipality / City first --</option>
+                    </select>
+                    <label for="brgy">Baranggay</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <input type="text" class="form-control" id="zip_code" name="zip_code">
+                    <label for="zip_code">Zip Code</label>
+                </div>
+            </div>
+        </div>
+    </form>
+</x-modal>
+<!-- Store Employee Modal -->
+<!-- Update Employee Modal -->
+<x-modal icon="fa fa-edit mr-5" title="Edit Employee" modalId="update-employee" formId="edit-employee">
+    <form id="edit-employee" action="" method="post">
+        @csrf
+        <h5 class="mb-1">Account Info</h5>
+        <div class="form-group row mb-4">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <input id="edit-number" type="text" class="form-control" name="number" style="background-color: #f0f2f5;">
+                    <label for="number">Employee number</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="account_type" name="account_type">
+                        <option hidden="" value="0">-- Select Role --</option>
+                        @forelse($account_types as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @empty
+                            <option disabled="">{{ __('No account types found on database.') }}</option>
+                        @endforelse
+                    </select>
+                    <label for="region">Account Type</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('account_type') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error store' : '')}} floating">
+                    <input id="personal_email" type="email" name="personal_email" class="form-control">
+                    <label for="personal_email">Email</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</x-modal>
+<!-- Update Employee Modal -->
 @endsection

@@ -231,17 +231,46 @@
          }
       });
 
+      // clear error messages when user fills out the specified field with error
       $('.form-error').on('change', function() {
         $(this).removeClass('form-error').children('span').html("");
+      });
+
+      // pass data from data tables to our edit form
+      $('#update-employee').on('show.bs.modal', function(e) {
+        
+      });
+
+      $('#update-employee').on('shown.bs.modal', function(e) {
+        var id = $(e.relatedTarget).data('target-id');
+        $('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
+        $('#edit-number').val(id);
+        $('#edit-number').prop('readonly', true);
+        $.ajax({
+          url: '/employees/' + id + '/edit',
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            //var response = JSON.parse(data);
+            console.log(data['account'][0]['account_type_id']);
+            $('#edit-employee').find('select[name="account_type"]').val(data['account'][0]['account_type_id']).change();
+            $('#edit-employee').find('input[name="personal_email"]').val(data['employee'][0]['personal_email']).parent('.form-material').addClass('open');
+          }
+        });
       });
     });
     </script>
 
-    @if (count($errors) > 0)
-      <script type="text/javascript">
-        // Keep modal open if there are errors
-        $('#modal-slideup').modal('show');
-      </script>
-    @endif
+    <script type="text/javascript">
+      // Keep modal open if there are errors
+      $findError = $('form').find('div');
+      if ($findError.hasClass('form-error store')) {
+        $('#store-employee').modal('show');  
+      }
+      
+      if ($findError.hasClass('form-error update')) {
+        $('#update-employee').modal('show');  
+      }
+    </script>
 </body>
 </html>
