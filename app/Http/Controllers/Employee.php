@@ -109,7 +109,17 @@ class Employee extends Controller
             'first_name' => 'required|alpha',
             'last_name' => 'required|alpha',
             'middle_name' => 'required|alpha',
-            'personal_email' => 'required|email',
+            'personal_email' => 'required|email|unique:employees,personal_email',
+            'address' => 'sometimes|required_with:region, zip_code',
+            'region' => 'sometimes|required_with:address, zip_code',
+            'province' => 'sometimes|required_with:region, address, zip_code',
+            'municipality' => 'sometimes|required_with:province, address, zip_code',
+            'brgy' => 'sometimes|required_with:municipality, address, zip_code',
+            'zip_code' => 'sometimes|required_with:brgy, address, region',
+        ],
+        [
+            'required_with' => 'Address must be complete.',
+            'personal_email.unique' => 'Email has already been taken.'
         ])->validateWithBag('storeEmployee');
 
         $employee = new \App\Employee();
@@ -128,7 +138,7 @@ class Employee extends Controller
         //$account->employee->save($employee);
         $account->save();
 
-        return redirect()->back()->withErrors($validator, 'storeEmployee');
+        return redirect()->back()->withErrors($validator, 'storeEmployee')->withInput($request->only('personal_email', 'first_name', 'middle_name', 'last_name', 'address', 'account_type'));
     }
 
     /**

@@ -34,7 +34,7 @@ class CreateEmployeesTable extends Migration
             $table->string('telephone')->nullable();
             $table->string('mobile')->nullable();
             $table->string('company_email')->nullable();
-            $table->string('personal_email')->nullable();
+            $table->string('personal_email')->nullable()->unique();
             $table->string('facebook_email')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('birth_place')->nullable();

@@ -107,6 +107,153 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="account_type" name="account_type" value="">
+                        <option hidden="" value="0">-- Select Role --</option>
+                        @forelse($account_types as $type)
+                            <option value="{{ $type->id }}" {{ old('account_type') == $type->id ? 'selected' : '' }}>
+                                {{ $type->name }}
+                            </option>
+                        @empty
+                            <option disabled="">{{ __('No account types found on database.') }}</option>
+                        @endforelse
+                    </select>
+                    <label for="account_type">Account Type</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('account_type') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error store' : '')}} floating">
+                    <input id="personal_email" type="email" name="personal_email" class="form-control" value="{{ old('personal_email') }}">
+                    <label for="personal_email">Email</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <h5 class="mb-1">Personal Info</h5>
+        <div class="form-group row mb-4">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name') }}">
+                    <label for="first_name">First Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('first_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ old('middle_name') }}">
+                    <label for="middle_name">Middle Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('middle_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name') }}">
+                    <label for="last_name">Last Name</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('last_name') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <h5 class="mb-1">Address</h5>
+        <div class="form-group row">
+            <div class="col">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('address') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}">
+                    <label for="address">Street address</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('address') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('region') ? ' form-error store' : '')}} floating open">
+                    <select class="form-control" id="region" name="region">
+                        <option value="" hidden="">-- Choose Region --</option>
+                        @forelse($regions as $region)
+                            <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
+                        @empty
+                            <option disabled="">{{ __('No regions found on database.') }}</option>
+                        @endforelse
+                    </select>
+                    <label for="region">Region</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('region') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('province') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="province" name="province" disabled="">
+                        <option hidden="">-- Select Region first --</option>
+                    </select>
+                    <label for="province">Province</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('province') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('municipality') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="municipality" name="municipality" disabled="">
+                        <option hidden="">-- Select Province first --</option>
+                    </select>
+                    <label for="municipality">Municipality / City</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('municipality') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('brgy') ? ' form-error store' : '')}} floating">
+                    <select class="form-control" id="brgy" name="brgy" disabled="">
+                        <option hidden="">-- Select a Municipality / City first --</option>
+                    </select>
+                    <label for="brgy">Baranggay</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('brgy') }}</strong>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('zip_code') ? ' form-error store' : '')}} floating">
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" value="{{ old('zip_code') }}">
+                    <label for="zip_code">Zip Code</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->storeEmployee->first('zip_code') }}</strong>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+</x-modal>
+<!-- Store Employee Modal -->
+<!-- Update Employee Modal -->
+<x-modal icon="fa fa-edit mr-5" title="Edit Employee" modalId="update-employee" formId="edit-employee">
+    <form id="edit-employee" action="" method="post">
+        @csrf
+        <h5 class="mb-1">Account Info</h5>
+        <div class="form-group row mb-4">
+            <div class="col-md-4">
+                <div class="form-material form-material-primary floating">
+                    <input id="edit-number" type="text" class="form-control" name="number" style="background-color: #f0f2f5;">
+                    <label for="number">Employee number</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error update' : '')}} floating">
                     <select class="form-control" id="account_type" name="account_type">
                         <option hidden="" value="0">-- Select Role --</option>
                         @forelse($account_types as $type)
@@ -122,7 +269,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error store' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error update' : '')}} floating">
                     <input id="personal_email" type="email" name="personal_email" class="form-control">
                     <label for="personal_email">Email</label>
                     <span class="invalid-feedback" role="alert">
@@ -134,7 +281,7 @@
         <h5 class="mb-1">Personal Info</h5>
         <div class="form-group row mb-4">
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error store' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="first_name" name="first_name">
                     <label for="first_name">First Name</label>
                     <span class="invalid-feedback" role="alert">
@@ -143,7 +290,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="middle_name" name="middle_name">
                     <label for="middle_name">Middle Name</label>
                     <span class="invalid-feedback" role="alert">
@@ -152,7 +299,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="last_name" name="last_name">
                     <label for="last_name">Last Name</label>
                     <span class="invalid-feedback" role="alert">
@@ -214,47 +361,6 @@
                 <div class="form-material form-material-primary floating">
                     <input type="text" class="form-control" id="zip_code" name="zip_code">
                     <label for="zip_code">Zip Code</label>
-                </div>
-            </div>
-        </div>
-    </form>
-</x-modal>
-<!-- Store Employee Modal -->
-<!-- Update Employee Modal -->
-<x-modal icon="fa fa-edit mr-5" title="Edit Employee" modalId="update-employee" formId="edit-employee">
-    <form id="edit-employee" action="" method="post">
-        @csrf
-        <h5 class="mb-1">Account Info</h5>
-        <div class="form-group row mb-4">
-            <div class="col-md-4">
-                <div class="form-material form-material-primary floating">
-                    <input id="edit-number" type="text" class="form-control" name="number" style="background-color: #f0f2f5;">
-                    <label for="number">Employee number</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating">
-                    <select class="form-control" id="account_type" name="account_type">
-                        <option hidden="" value="0">-- Select Role --</option>
-                        @forelse($account_types as $type)
-                            <option value="{{ $type->id }}">{{ $type->name }}</option>
-                        @empty
-                            <option disabled="">{{ __('No account types found on database.') }}</option>
-                        @endforelse
-                    </select>
-                    <label for="region">Account Type</label>
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('account_type') }}</strong>
-                    </span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error store' : '')}} floating">
-                    <input id="personal_email" type="email" name="personal_email" class="form-control">
-                    <label for="personal_email">Email</label>
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
-                    </span>
                 </div>
             </div>
         </div>
