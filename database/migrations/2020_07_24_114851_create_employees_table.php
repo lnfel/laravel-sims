@@ -24,7 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->string('middle_name');
             $table->unsignedBigInteger('status_id')->default(1);
             $table->foreign('status_id')->references('id')->on('statuses');
-            $table->string('address')->default('#23 Bahay ni Kuya dyan sa may kanto');
+            $table->string('address')->nullable();
             $table->string('brgy')->nullable();
             $table->string('municipality')->nullable();
             $table->string('city')->nullable();

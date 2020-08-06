@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Validator;
+use Carbon\Carbon;
 
 class Employee extends Controller
 {
@@ -32,6 +33,7 @@ class Employee extends Controller
         // Check if a record exists on accounts table
         $accountExists = \App\Account::exists();
         $employeeExists = \App\Employee::exists();
+        $now = Carbon::now('utc')->toDateString();
 
         if ($accountExists) {
           // Get latest or last username created
@@ -40,7 +42,13 @@ class Employee extends Controller
           // Note that php already coerce string to int conversion when doing this
           // In cases we want to explicitly convert the type:
           // we can cast it Ex. (int)$last_username 
-          $new_username = $last_username + 1;
+          if (\App\Account::latest('created_at')->first()->created_at->toDateString() == $now) {
+            // if latest account is created today, increment it
+            $new_username = $last_username + 1;
+          } else {
+            // generate id using date today
+            $new_username = date("Ymd") . '01';
+          }
         } else {
           $last_username = null;
           $new_username = null;
@@ -110,15 +118,16 @@ class Employee extends Controller
             'last_name' => 'required|alpha',
             'middle_name' => 'required|alpha',
             'personal_email' => 'required|email|unique:employees,personal_email',
-            'address' => 'sometimes|required_with:region, zip_code',
-            'region' => 'sometimes|required_with:address, zip_code',
-            'province' => 'sometimes|required_with:region, address, zip_code',
-            'municipality' => 'sometimes|required_with:province, address, zip_code',
-            'brgy' => 'sometimes|required_with:municipality, address, zip_code',
-            'zip_code' => 'sometimes|required_with:brgy, address, region',
+            'address' => 'sometimes|required_with:region,province,municipality,brgy,zip_code',
+            'region' => 'sometimes|required_with:address,zip_code',
+            'province' => 'sometimes|required_with:region,address,zip_code',
+            'municipality' => 'sometimes|required_with:address,region,province,zip_code',
+            'brgy' => 'sometimes|required_with:address,region,province,municipality,zip_code',
+            'zip_code' => 'sometimes|required_with:address,region,province,municipality,brgy',
         ],
         [
             'required_with' => 'Address must be complete.',
+            'personal_email.required' => 'The email field is required.',
             'personal_email.unique' => 'Email has already been taken.'
         ])->validateWithBag('storeEmployee');
 
@@ -128,6 +137,14 @@ class Employee extends Controller
         $employee->last_name = request('last_name');
         $employee->middle_name = request('middle_name');
         $employee->personal_email = request('personal_email');
+        //if (request('address') != "" && request('address') != " ") {
+            $employee->address = request('address');
+            $employee->region = request('region');
+            $employee->province = request('province');
+            $employee->municipality = request('municipality');
+            $employee->brgy = request('brgy');
+            $employee->zip_code = request('zip_code');
+        //}
         $employee->save();
 
         $account = new \App\Account();

@@ -35,6 +35,10 @@
     .form-material.form-error label {
       color: #db4343;
     }
+
+    .form-material .form-control[readonly] {
+      background-color: transparent;
+    }
   </style>
 </head>
 <body>
@@ -221,11 +225,14 @@
           dataType : "json",
           success:function(data)
           {
+            // get old value
+            var oldProvince = $('#province').data('old-province');
+            console.log(oldProvince);
             console.log("Getting province...");
             console.table(data);
-            $('#' + modal_id).find('select[name="province"]').prop('disabled', false);
+            $('#' + modal_id).find('select[name="province"]').prop('readonly', false);
             $('#' + modal_id).find('select[name="province"]').empty();
-            $('#' + modal_id).find('select[name="province"]').append('<option hidden>-- Provinces loaded --</option>');
+            $('#' + modal_id).find('select[name="province"]').append('<option value="" hidden>-- Provinces loaded --</option>');
             $.each(data, function(key, value){
                $('#' + modal_id).find('select[name="province"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
@@ -235,6 +242,12 @@
             if (exists) {
               //$('#edit-employee').find('select[name="province"]').val(data[employee][0]['province']).change();
               $('#' + modal_id).find('select[name="province"]').val(testProvince).change();
+            }
+
+            // check if there are old values
+            if ($('#province').data('old-province') != "" && $('#province').data('old-province') != null) {
+              console.log('Old province data: ' + $('#province').data('old-province'));
+              $("#province").val($("#province").data('old-province')).trigger('change');
             }
           }
         })
@@ -252,9 +265,9 @@
           {
             console.log("Getting Cities and Municipalities");
             console.table(data);
-            $('#' + modal_id).find('select[name="municipality"]').prop('disabled', false);
+            $('#' + modal_id).find('select[name="municipality"]').prop('readonly', false);
             $('#' + modal_id).find('select[name="municipality"]').empty();
-            $('#' + modal_id).find('select[name="municipality"]').append('<option hidden>-- Cities and Municipality loaded --</option>');
+            $('#' + modal_id).find('select[name="municipality"]').append('<option value="" hidden>-- Cities and Municipality loaded --</option>');
             $.each(data, function(key, value){
                $('#' + modal_id).find('select[name="municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
@@ -263,6 +276,12 @@
             if (exists) {
               //$('#edit-employee').find('select[name="municipality"]').val(data[employee][0]['municipality']).change();
               $('#' + modal_id).find('select[name="municipality"]').val(testCity).change();
+            }
+
+            // check if there are old values
+            if ($('#municipality').data('old-municipality') != "" && $('#municipality').data('old-municipality') != null) {
+              console.log('Old municipality data: ' + $('#municipality').data('old-municipality'));
+              $("#municipality").val($("#municipality").data('old-municipality')).trigger('change');
             }
           }
         })
@@ -280,9 +299,9 @@
           {
             console.log("Getting Barangays");
             console.table(data);
-            $('#' + modal_id).find('select[name="brgy"]').prop('disabled', false);
+            $('#' + modal_id).find('select[name="brgy"]').prop('readonly', false);
             $('#' + modal_id).find('select[name="brgy"]').empty();
-            $('#' + modal_id).find('select[name="brgy"]').append('<option hidden>-- Baranggays loaded --</option>');
+            $('#' + modal_id).find('select[name="brgy"]').append('<option value="" hidden>-- Baranggays loaded --</option>');
             $.each(data, function(key, value){
                $('#' + modal_id).find('select[name="brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
@@ -291,6 +310,12 @@
             if (exists) {
               //$('#edit-employee').find('select[name="brgy"]').val(data[employee][0]['brgy']).change();
               $('#' + modal_id).find('select[name="brgy"]').val(testBarangay).change();
+            }
+
+            // check if there are old values
+            if ($('#brgy').data('old-brgy') != "" && $('#brgy').data('old-brgy') != null) {
+              console.log('Old brgy data: ' + $('#brgy').data('old-brgy'));
+              $("#brgy").val($("#brgy").data('old-brgy')).trigger('change');
             }
           }
         })
@@ -330,6 +355,12 @@
             var city_municipality_code = $(this).val();
             $.fn.getBarangays(city_municipality_code, exists, modal_id);
           });
+
+          // check if there are old values
+          if ($('#region').data('old-region') != "" && $('#region').data('old-region') != null) {
+            console.log('Old region data: ' + $('#region').data('old-region'));
+            $("#region").val($("#region").data('old-region')).trigger('change');
+          }
         }
 
         // Raise the label if modal opened with input having values or form returned old values
@@ -346,9 +377,9 @@
         //$(this).find('#edit-employee').find('select').empty();
         $('form').find('.open').removeClass('open').find('select').parent('.form-material').addClass('open');
         $('.modal').find('select').not('[name="region"], [name="account_type"]').empty();
-        $('.modal').find('select[name="province"]').append('<option hidden>-- Select Region first --</option>');
-        $('.modal').find('select[name="municipality"]').append('<option hidden>-- Select Province first --</option>');
-        $('.modal').find('select[name="brgy"]').append('<option hidden>-- Select a Municipality / City first --</option>');
+        $('.modal').find('select[name="province"]').append('<option value="" hidden>-- Select Region first --</option>');
+        $('.modal').find('select[name="municipality"]').append('<option value="" hidden>-- Select Province first --</option>');
+        $('.modal').find('select[name="brgy"]').append('<option value="" hidden>-- Select a Municipality / City first --</option>');
         $('.modal').find('select').not('[name="region"], [name="account_type"]').prop('disabled', true);
       });
 
@@ -358,6 +389,10 @@
       });
 
       console.log("jQuery ready");
+
+      window.addEventListener("load", function(){
+        
+      });
     });
     </script>
 

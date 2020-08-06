@@ -106,9 +106,9 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating open">
                     <select class="form-control" id="account_type" name="account_type" value="">
-                        <option hidden="" value="0">-- Select Role --</option>
+                        <option hidden="" value="{{ null }}">-- Select Role --</option>
                         @forelse($account_types as $type)
                             <option value="{{ $type->id }}" {{ old('account_type') == $type->id ? 'selected' : '' }}>
                                 {{ $type->name }}
@@ -178,10 +178,10 @@
         <div class="form-group row">
             <div class="col-md-6">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('region') ? ' form-error store' : '')}} floating open">
-                    <select class="form-control" id="region" name="region">
+                    <select class="form-control" id="region" name="region" data-old-region="{{ old('region') ? old('region') : '' }}">
                         <option value="" hidden="">-- Choose Region --</option>
                         @forelse($regions as $region)
-                            <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
+                            <option value="{{ $region->region_code }}" {{-- old('region') == $region->region_code ? 'selected' : '' --}}>{{ $region->region_description }}</option>
                         @empty
                             <option disabled="">{{ __('No regions found on database.') }}</option>
                         @endforelse
@@ -193,9 +193,9 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('province') ? ' form-error store' : '')}} floating">
-                    <select class="form-control" id="province" name="province" disabled="">
-                        <option hidden="">-- Select Region first --</option>
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('province') ? ' form-error store' : '')}} floating open">
+                    <select class="form-control" id="province" name="province" data-old-province="{{ old('province') ? old('province') : '' }}">
+                        <option value="" hidden="">-- Select Region first --</option>
                     </select>
                     <label for="province">Province</label>
                     <span class="invalid-feedback" role="alert">
@@ -206,9 +206,9 @@
         </div>
         <div class="form-group row">
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('municipality') ? ' form-error store' : '')}} floating">
-                    <select class="form-control" id="municipality" name="municipality" disabled="">
-                        <option hidden="">-- Select Province first --</option>
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('municipality') ? ' form-error store' : '')}} floating open">
+                    <select class="form-control" id="municipality" name="municipality" data-old-municipality="{{ old('municipality') }}">
+                        <option value="" hidden="">-- Select Province first --</option>
                     </select>
                     <label for="municipality">Municipality / City</label>
                     <span class="invalid-feedback" role="alert">
@@ -217,9 +217,9 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('brgy') ? ' form-error store' : '')}} floating">
-                    <select class="form-control" id="brgy" name="brgy" disabled="">
-                        <option hidden="">-- Select a Municipality / City first --</option>
+                <div class="form-material form-material-primary {{($errors->storeEmployee->first('brgy') ? ' form-error store' : '')}} floating open">
+                    <select class="form-control" id="brgy" name="brgy" data-old-brgy="{{ old('brgy') }}">
+                        <option value="" hidden="">-- Select a Municipality / City first --</option>
                     </select>
                     <label for="brgy">Baranggay</label>
                     <span class="invalid-feedback" role="alert">
@@ -254,7 +254,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error update' : '')}} floating">
-                    <select class="form-control" id="account_type" name="account_type">
+                    <select class="form-control" id="" name="account_type">
                         <option hidden="" value="0">-- Select Role --</option>
                         @forelse($account_types as $type)
                             <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -270,7 +270,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error update' : '')}} floating">
-                    <input id="personal_email" type="email" name="personal_email" class="form-control">
+                    <input id="" type="email" name="personal_email" class="form-control">
                     <label for="personal_email">Email</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
@@ -282,7 +282,7 @@
         <div class="form-group row mb-4">
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="first_name" name="first_name">
+                    <input type="text" class="form-control" id="" name="first_name">
                     <label for="first_name">First Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->storeEmployee->first('first_name') }}</strong>
@@ -291,7 +291,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="middle_name" name="middle_name">
+                    <input type="text" class="form-control" id="" name="middle_name">
                     <label for="middle_name">Middle Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->storeEmployee->first('middle_name') }}</strong>
@@ -300,7 +300,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="last_name" name="last_name">
+                    <input type="text" class="form-control" id="" name="last_name">
                     <label for="last_name">Last Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->storeEmployee->first('last_name') }}</strong>
@@ -312,7 +312,7 @@
         <div class="form-group row">
             <div class="col">
                 <div class="form-material form-material-primary floating">
-                    <input type="text" class="form-control" id="address" name="address">
+                    <input type="text" class="form-control" id="" name="address">
                     <label for="address">Street address</label>
                 </div>
             </div>
@@ -320,7 +320,7 @@
         <div class="form-group row">
             <div class="col-md-6">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="region" name="region">
+                    <select class="form-control" id="" name="region">
                         <option hidden="">-- Choose Region --</option>
                         @forelse($regions as $region)
                             <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
@@ -333,7 +333,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="province" name="province" disabled="">
+                    <select class="form-control" id="" name="province" disabled="">
                         <option hidden="">-- Select Region first --</option>
                     </select>
                     <label for="province">Province</label>
@@ -343,7 +343,7 @@
         <div class="form-group row">
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="municipality" name="municipality" disabled="">
+                    <select class="form-control" id="" name="municipality" disabled="">
                         <option hidden="">-- Select Province first --</option>
                     </select>
                     <label for="municipality">Municipality / City</label>
@@ -351,7 +351,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="brgy" name="brgy" disabled="">
+                    <select class="form-control" id="" name="brgy" disabled="">
                         <option hidden="">-- Select a Municipality / City first --</option>
                     </select>
                     <label for="brgy">Baranggay</label>
@@ -359,7 +359,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <input type="text" class="form-control" id="zip_code" name="zip_code">
+                    <input type="text" class="form-control" id="" name="zip_code">
                     <label for="zip_code">Zip Code</label>
                 </div>
             </div>
