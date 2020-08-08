@@ -179,8 +179,8 @@ class Employee extends Controller
     public function edit(EmployeeModel $employee)
     {
         $data = [];
-        $data['employee'] = $employee->get()->toArray();
-        $data['account'] = \App\Account::where('employee_id', $data['employee'][0]['id'])->get()->toArray();
+        $data['employee'] = $employee->toArray();
+        $data['account'] = \App\Account::where('employee_id', $employee->id)->get()->toArray();
 
         return json_encode($data);
     }
@@ -218,6 +218,8 @@ class Employee extends Controller
             'personal_email.required' => 'The email field is required.',
             'personal_email.unique' => 'Email has already been taken.'
         ])->validateWithBag('updateEmployee');
+
+        $employee->update($validator);
 
         return redirect()->back()->withErrors($validator, 'updateEmployee');
     }

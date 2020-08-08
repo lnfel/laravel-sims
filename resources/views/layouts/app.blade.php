@@ -155,29 +155,35 @@
         });
       }
 
-      $.fn.getEmployeeData = function(employee_number) {
-        console.log("Employee number: " + employee_number);
+      $.fn.getEmployeeData = function(employee_id) {
+        console.log("Employee number: " + employee_id);
 
         $.ajax({
-          url: '/employees/' + employee_number + '/edit',
+          url: '/employees/' + employee_id + '/edit',
           type: "GET",
           dataType: "json",
           success: function(data) {
             console.log("Current Employee Data");
-            console.table(data['account'], ["id", "username", "email"]);
+            console.table(data['account'], ["id", "username", "email", "account_type_id"]);
             console.table(data['employee'], ["id", "number", "first_name", "last_name", "address", "personal_email"]);
+            console.log("Account Type ID");
+            console.log(data['account'][0]['account_type_id']);
 
-            $('#edit-employee').prop('action', '/employees/' + data['employee'][0]['id']);
-            $('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee'][0]['id'] +'">');
+            $('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
+            $('#edit-number').val(data['employee']['number']);
+            $('#edit-number').prop('readonly', true);
+
+            $('#edit-employee').prop('action', '/employees/' + data['employee']['id']);
+            //$('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee']['id'] +'">');
 
             // Account Info
-            $('#edit-employee').find('select[name="account_type"]').val(data['account'][0]['account_type_id']).change();
-            $('#edit-employee').find('input[name="personal_email"]').val(data['employee'][0]['personal_email']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('select[name="account_type"]').val(data['account'][0]['account_type_id']).trigger('change');
+            $('#edit-employee').find('input[name="personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
 
             // Personal Info
-            $('#edit-employee').find('input[name="first_name"]').val(data['employee'][0]['first_name']).parent('.form-material').addClass('open');
-            $('#edit-employee').find('input[name="middle_name"]').val(data['employee'][0]['middle_name']).parent('.form-material').addClass('open');
-            $('#edit-employee').find('input[name="last_name"]').val(data['employee'][0]['last_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="first_name"]').val(data['employee']['first_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="middle_name"]').val(data['employee']['middle_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="last_name"]').val(data['employee']['last_name']).parent('.form-material').addClass('open');
 
             //var response = JSON.parse(data);
             //console.log(response);
@@ -185,7 +191,7 @@
         })
         .done(function(data) {
           console.log("Employee request done, checking for address...");
-          if (data['employee'][0]['region'] != null) {
+          if (data['employee']['region'] != null) {
             console.log("Associated address found.");
           } else {
             console.log("No address associated with current employee.");
@@ -200,14 +206,14 @@
             var testBarangay = "045813001";
             var testZipCode = "1920";
 
-            //$('#edit-employee').find('select[name="region"]').val(data['employee'][0]['region']).change();
+            //$('#edit-employee').find('select[name="region"]').val(data['employee']['region']).change();
             $('#edit-employee').find('select[name="region"]').val(testRegion).change();
             if (exists) {
-              $('#edit-employee').find('input[name="address"]').val(data['employee'][0]['address']).parent('.form-material').addClass('open');
+              $('#edit-employee').find('input[name="address"]').val(data['employee']['address']).parent('.form-material').addClass('open');
               $.fn.getProvinces(region_code, exists, modal_id, testProvince);
               $.fn.getCities(province_code, exists, modal_id, testCity);
               $.fn.getBarangays(city_municipality_code, exists, modal_id, testBarangay);
-              //$('#edit-employee').find('input[name="zip_code"]').val(data['employee'][0]['zip_code']).parent('.form-material').addClass('open');
+              //$('#edit-employee').find('input[name="zip_code"]').val(data['employee']['zip_code']).parent('.form-material').addClass('open');
               $('#edit-employee').find('input[name="zip_code"]').val(testZipCode).parent('.form-material').addClass('open');
             }
           }
@@ -330,13 +336,13 @@
         console.log(id);
 
         if (id === "update-employee") {
-          var employee_number = $(e.relatedTarget).data('target-id');
-          $('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
-          $('#edit-number').val(employee_number);
-          $('#edit-number').prop('readonly', true);
+          var employee_id = $(e.relatedTarget).data('target-id');
+          //$('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
+          //$('#edit-number').val(employee_number);
+          //$('#edit-number').prop('readonly', true);
           $('#edit-employee').find('select').prop('disabled', false);
           $('#edit-employee').find('select').parent('.form-material').addClass('open');
-          $.fn.getEmployeeData(employee_number);
+          $.fn.getEmployeeData(employee_id);
         } else if (id === "store-employee") {
           var exists = false;
           var modal_id = "store-employee";
@@ -412,7 +418,7 @@
         }
         
         if ($findError.hasClass('form-error update')) {
-          //$('#update-employee').modal('show');  
+          $('#update-employee').modal('show');  
         }
       //});
     </script>

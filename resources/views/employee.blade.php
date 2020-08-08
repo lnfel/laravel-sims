@@ -55,10 +55,10 @@
                     <span class="badge badge-success">{{ $account->status->name }}</span>
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->id }}" data-target="#update-employee">
+                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-target="#update-employee">
                         <i class="fa fa-edit"></i>
                     </button>
-                	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee">
+                	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee">
                         <i class="fa fa-times"></i>
                     </button>
                 </td>
@@ -254,7 +254,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error update' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->updateEmployee->first('account_type') ? ' form-error update' : '')}} floating">
                     <select class="form-control" id="" name="account_type">
                         <option hidden="" value="0">-- Select Role --</option>
                         @forelse($account_types as $type)
@@ -265,16 +265,16 @@
                     </select>
                     <label for="region">Account Type</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('account_type') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('account_type') }}</strong>
                     </span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('personal_email') ? ' form-error update' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->updateEmployee->first('personal_email') ? ' form-error update' : '')}} floating">
                     <input id="" type="email" name="personal_email" class="form-control">
                     <label for="personal_email">Email</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('personal_email') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('personal_email') }}</strong>
                     </span>
                 </div>
             </div>
@@ -282,29 +282,29 @@
         <h5 class="mb-1">Personal Info</h5>
         <div class="form-group row mb-4">
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error update' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->updateEmployee->first('first_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="" name="first_name">
                     <label for="first_name">First Name</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('first_name') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('first_name') }}</strong>
                     </span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('middle_name') ? ' form-error update' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->updateEmployee->first('middle_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="" name="middle_name">
                     <label for="middle_name">Middle Name</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('middle_name') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('middle_name') }}</strong>
                     </span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->storeEmployee->first('last_name') ? ' form-error update' : '')}} floating">
+                <div class="form-material form-material-primary {{($errors->updateEmployee->first('last_name') ? ' form-error update' : '')}} floating">
                     <input type="text" class="form-control" id="" name="last_name">
                     <label for="last_name">Last Name</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->storeEmployee->first('last_name') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('last_name') }}</strong>
                     </span>
                 </div>
             </div>
