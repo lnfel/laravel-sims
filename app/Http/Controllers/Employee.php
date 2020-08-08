@@ -165,7 +165,7 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show(EmployeeModel $employee)
     {
         //
     }
@@ -176,10 +176,10 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit($employee)
+    public function edit(EmployeeModel $employee)
     {
         $data = [];
-        $data['employee'] = \App\Employee::where('number', $employee)->get()->toArray();
+        $data['employee'] = $employee->get()->toArray();
         $data['account'] = \App\Account::where('employee_id', $data['employee'][0]['id'])->get()->toArray();
 
         return json_encode($data);
@@ -192,10 +192,34 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, EmployeeModel $employee)
     {
-        EmployeeModel::where('id', request('employee_id'))->firstOrFail();
-        return redirect()->back();
+        //EmployeeModel::where('id', request('employee_id'))->firstOrFail();
+
+        $validator = Validator::make($request->all(), [
+            'number' => 'required',
+            'account_type' => [
+                'required',
+                Rule::notIn([0]),
+            ],
+            'first_name' => 'required|alpha',
+            'last_name' => 'required|alpha',
+            'middle_name' => 'required|alpha',
+            'personal_email' => 'required|email|unique:employees,personal_email',
+            'address' => 'sometimes|required_with:region,province,municipality,brgy,zip_code',
+            'region' => 'sometimes|required_with:address,zip_code',
+            'province' => 'sometimes|required_with:region,address,zip_code',
+            'municipality' => 'sometimes|required_with:address,region,province,zip_code',
+            'brgy' => 'sometimes|required_with:address,region,province,municipality,zip_code',
+            'zip_code' => 'sometimes|required_with:address,region,province,municipality,brgy',
+        ],
+        [
+            'required_with' => 'Address must be complete.',
+            'personal_email.required' => 'The email field is required.',
+            'personal_email.unique' => 'Email has already been taken.'
+        ])->validateWithBag('updateEmployee');
+
+        return redirect()->back()->withErrors($validator, 'updateEmployee');
     }
 
     /**
@@ -204,16 +228,16 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Account $employee_id)
+    public function destroy(Request $request, EmployeeModel $employee)
     {
         // soft delete not working here for some reason
         // might be constrained only for forceDelete method
         
     }
 
-    public function softDelete(Request $request)
+    public function softDelete(Request $request, EmployeeModel $employee)
     {
-        Account::where('employee_id', request('employee_id'))->firstOrFail()->delete();
+        $employee->account->delete();
         return redirect()->back();
     }
 }

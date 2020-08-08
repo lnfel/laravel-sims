@@ -365,7 +365,7 @@
         } else {
           var employee_id = $(e.relatedTarget).data('target-id');
           var employee_full_name = $(e.relatedTarget).data('full-name');
-          $('#delete-employee').prop('action', '/employee/' + employee_id);
+          $('#delete-employee').prop('action', '/employees/' + employee_id);
           $('#delete-employee').prepend('<input type="hidden" name="employee_id" value="'+ employee_id +'">');
           $('#employee').find("b").html(employee_full_name);
         }

@@ -55,7 +55,7 @@
                     <span class="badge badge-success">{{ $account->status->name }}</span>
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->number }}" data-target="#update-employee">
+                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->id }}" data-target="#update-employee">
                         <i class="fa fa-edit"></i>
                     </button>
                 	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee">

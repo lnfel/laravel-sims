@@ -90,4 +90,4 @@ Route::resources([
   'employees' => 'Employee',
 ]);
 
-Route::delete('/employee/{employee_id}', 'Employee@softDelete')->name('employees.soft-delete');
+Route::delete('/employees/{employee}', 'Employee@softDelete')->name('employees.soft-delete');
