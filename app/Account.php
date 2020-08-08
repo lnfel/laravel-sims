@@ -6,9 +6,11 @@ use App\Notifications\AccountResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends Authenticatable
 {
+  use SoftDeletes;
   use Notifiable;
 
   protected $guard = 'account';

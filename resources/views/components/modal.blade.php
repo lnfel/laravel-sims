@@ -1,6 +1,6 @@
 <!-- https://www.thisprogrammingthing.com/what-the-f-ck-is-with-all-the-artisan-commands-make-component/ -->
 <div class="modal fade" id="{{ $modalId }}" tabindex="-1" role="dialog" aria-labelledby="{{ $modalId }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-slideup" role="document">
+    <div class="modal-dialog {{ $modalSize ? $modalSize : 'modal-lg' }} modal-dialog-slideup" role="document">
         <div class="modal-content">
             <div class="block block-themed block-transparent mb-0">
                 <div class="block-header bg-primary-dark">
@@ -16,9 +16,18 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button form="{{ $formId }}" class="btn btn-success btn-noborder">
-                    Submit
-                </button>
+                @if($yesOrNo === 'false')
+                    <button form="{{ $formId }}" class="btn btn-success btn-noborder">
+                        Submit
+                    </button>
+                @else
+                    <button form="{{ $formId }}" class="btn btn-warning btn-noborder">
+                        Confirm
+                    </button>
+                    <button form="{{ $formId }}" class="btn btn-primary btn-noborder" data-toggle="modal" data-target="#destroy-employee">
+                        Cancel
+                    </button>
+                @endif
             </div>
         </div>
     </div>

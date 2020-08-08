@@ -10,17 +10,21 @@ class Modal extends Component
     public $icon = '';
     public $modalId = '';
     public $formId = '';
+    public $modalSize = '';
+    public $yesOrNo = '';
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($modalId, $title, $icon, $formId)
+    public function __construct($modalId, $title, $icon, $formId, $modalSize = '', $yesOrNo = 'false')
     {
         $this->modalId = $modalId;
         $this->title = $title;
         $this->icon = $icon;
         $this->formId = $formId;
+        $this->modalSize = $modalSize;
+        $this->yesOrNo = $yesOrNo;
     }
 
     /**

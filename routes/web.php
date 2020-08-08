@@ -89,3 +89,5 @@ Route::get('/dropdownlist/getbarangays/{id}', 'Dashboard@getBarangays');
 Route::resources([
   'employees' => 'Employee',
 ]);
+
+Route::delete('/employee/{employee_id}', 'Employee@softDelete')->name('employees.soft-delete');

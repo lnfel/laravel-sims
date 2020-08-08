@@ -168,6 +168,7 @@
             console.table(data['employee'], ["id", "number", "first_name", "last_name", "address", "personal_email"]);
 
             $('#edit-employee').prop('action', '/employees/' + data['employee'][0]['id']);
+            $('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee'][0]['id'] +'">');
 
             // Account Info
             $('#edit-employee').find('select[name="account_type"]').val(data['account'][0]['account_type_id']).change();
@@ -336,7 +337,7 @@
           $('#edit-employee').find('select').prop('disabled', false);
           $('#edit-employee').find('select').parent('.form-material').addClass('open');
           $.fn.getEmployeeData(employee_number);
-        } else {
+        } else if (id === "store-employee") {
           var exists = false;
           var modal_id = "store-employee";
           $('#number').parent('.form-material').addClass('open');
@@ -361,6 +362,12 @@
             console.log('Old region data: ' + $('#region').data('old-region'));
             $("#region").val($("#region").data('old-region')).trigger('change');
           }
+        } else {
+          var employee_id = $(e.relatedTarget).data('target-id');
+          var employee_full_name = $(e.relatedTarget).data('full-name');
+          $('#delete-employee').prop('action', '/employee/' + employee_id);
+          $('#delete-employee').prepend('<input type="hidden" name="employee_id" value="'+ employee_id +'">');
+          $('#employee').find("b").html(employee_full_name);
         }
 
         // Raise the label if modal opened with input having values or form returned old values

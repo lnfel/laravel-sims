@@ -28,11 +28,11 @@
   <div class="content">
   	<!-- Dynamic Table Full Pagination -->
     {{-- $response->json() --}}
-    <span>Status: </span>{{-- $response->status() --}}
+    <!-- <span>Status: </span> -->{{-- $response->status() --}}
     <div class="block">
-      <div class="block-header block-header-default">
+      <!-- <div class="block-header block-header-default">
           <h3 class="block-title">Dynamic Table <small>Full pagination</small></h3>
-      </div>
+      </div> -->
       <div class="block-content block-content-full">
         <!-- DataTables functionality is initialized with .js-dataTable-full-pagination class in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
         <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
@@ -46,19 +46,19 @@
             </tr>
           </thead>
           <tbody>
-            @forelse($employees as $e)
+            @forelse($employees as $account)
           	<tr>
-                <td class="text-center">{{ $e->number }}</td>
-                <td class="font-w600"><a href="#">{{ $e->first_name }}</a></td>
-                <td class="d-none d-sm-table-cell">{{ $e->personal_email }}</td>
+                <td class="text-center">{{ $account->employee->number }}</td>
+                <td class="font-w600"><a class="link-effect" href="#">{{ $account->employee->first_name }} {{ $account->employee->last_name }}</a></td>
+                <td class="d-none d-sm-table-cell">{{ $account->employee->personal_email }}</td>
                 <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">{{ $e->account->status->name }}</span>
+                    <span class="badge badge-success">{{ $account->status->name }}</span>
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $e->number }}" data-target="#update-employee">
+                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->number }}" data-target="#update-employee">
                         <i class="fa fa-edit"></i>
                     </button>
-                	<button type="button" class="btn btn-danger mr-5 mb-5">
+                	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee->id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee">
                         <i class="fa fa-times"></i>
                     </button>
                 </td>
@@ -244,6 +244,7 @@
 <x-modal icon="fa fa-edit mr-5" title="Edit Employee" modalId="update-employee" formId="edit-employee">
     <form id="edit-employee" action="" method="post">
         @csrf
+        @method('PATCH')
         <h5 class="mb-1">Account Info</h5>
         <div class="form-group row mb-4">
             <div class="col-md-4">
@@ -367,4 +368,17 @@
     </form>
 </x-modal>
 <!-- Update Employee Modal -->
+<!-- Destroy Employee Modal -->
+<x-modal icon="fa fa-times mr-5" title="Delete Employee" modalId="destroy-employee" formId="delete-employee" modalSize="modal-sm" yesOrNo="true">
+    <form id="delete-employee" action="" method="post">
+        @csrf
+        @method('DELETE')
+        <div class="form-group row" style="font-size: 1.142857rem;">
+            <div class="col">
+                You are about to delete record of: <br><span id="employee"><b></b></span>.
+            </div>
+        </div>
+    </form>
+</x-modal>
+<!-- Destroy Employee Modal -->
 @endsection

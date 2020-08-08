@@ -54,7 +54,9 @@ class MigrateInOrder extends Command
                     '2020_07_24_054417_create_statuses_table.php',
                     '2020_07_23_031752_create_account_types_table.php',
                     '2020_07_24_114851_create_employees_table.php',
-                    '2020_07_16_053035_creates_accounts_table.php'
+                    '2020_07_16_053035_creates_accounts_table.php',
+                    '2020_08_08_104714_add_deleted_at_column_to_accounts.php',
+                    '2020_08_08_125206_add_deleted_at_column_to_employees.php'
                 ];
                 break;
 
@@ -80,6 +82,8 @@ class MigrateInOrder extends Command
                     '2020_07_23_031752_create_account_types_table.php',
                     '2020_07_24_114851_create_employees_table.php',
                     '2020_07_16_053035_creates_accounts_table.php',
+                    '2020_08_08_104714_add_deleted_at_column_to_accounts.php',
+                    '2020_08_08_125206_add_deleted_at_column_to_employees.php',
                     $psgcPath.'1995_10_23_100000_create_philippine_regions_table.php',
                     $psgcPath.'1995_10_23_200000_create_philippine_provinces_table.php',
                     $psgcPath.'1995_10_23_300000_create_philippine_cities_table.php',

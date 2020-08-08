@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Employee as EmployeeModel;
+use App\Account;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,7 +71,7 @@ class Employee extends Controller
         //, 'provinces', 'cities', 'barangays'
 
         if ($employeeExists) {
-            $employees = \App\Employee::get();
+            $employees = Account::where('status_id', 1)->with('employee')->get();
         }
 
         $employee = [];
@@ -147,7 +148,7 @@ class Employee extends Controller
         //}
         $employee->save();
 
-        $account = new \App\Account();
+        $account = new Account();
         $account->username = request('number');
         $account->password = Hash::make('mmm');
         $account->email = $employee->personal_email;
@@ -191,9 +192,10 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request)
     {
-        //
+        EmployeeModel::where('id', request('employee_id'))->firstOrFail();
+        return redirect()->back();
     }
 
     /**
@@ -202,8 +204,16 @@ class Employee extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy(Account $employee_id)
     {
-        //
+        // soft delete not working here for some reason
+        // might be constrained only for forceDelete method
+        
+    }
+
+    public function softDelete(Request $request)
+    {
+        Account::where('employee_id', request('employee_id'))->firstOrFail()->delete();
+        return redirect()->back();
     }
 }
