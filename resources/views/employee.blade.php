@@ -137,7 +137,7 @@
         <div class="form-group row mb-4">
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('first_name') ? ' form-error store' : '')}} floating">
-                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name') }}">
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $errors->storeEmployee ? old('first_name') : '' }}">
                     <label for="first_name">First Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->storeEmployee->first('first_name') }}</strong>
@@ -242,39 +242,42 @@
 <!-- Store Employee Modal -->
 <!-- Update Employee Modal -->
 <x-modal icon="fa fa-edit mr-5" title="Edit Employee" modalId="update-employee" formId="edit-employee">
-    <form id="edit-employee" action="" method="post">
+    <form id="edit-employee" action="" method="post" data-old-employee-id="{{ session('employee_id') }}">
+        <input type="hidden" id="employee_id" name="employee_id" value="{{ old('employee_id') }}">
         @csrf
         @method('PATCH')
         <h5 class="mb-1">Account Info</h5>
         <div class="form-group row mb-4">
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <input id="edit-number" type="text" class="form-control" name="number" style="background-color: #f0f2f5;">
+                    <input id="edit-number" type="text" class="form-control" name="edit_number" value="{{ old('edit_number') }}" style="background-color: #f0f2f5;">
                     <label for="number">Employee number</label>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->updateEmployee->first('account_type') ? ' form-error update' : '')}} floating">
-                    <select class="form-control" id="" name="account_type">
+                <div class="form-material form-material-primary {{ $errors->updateEmployee->first('edit_account_type') ? 'form-error update' : '' }} floating">
+                    <select class="form-control" id="" name="edit_account_type">
                         <option hidden="" value="0">-- Select Role --</option>
                         @forelse($account_types as $type)
-                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            <option value="{{ $type->id }}" {{ old('edit_account_type') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
                         @empty
                             <option disabled="">{{ __('No account types found on database.') }}</option>
                         @endforelse
                     </select>
                     <label for="region">Account Type</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->updateEmployee->first('account_type') }}</strong>
+                        <strong>
+                            {{ $errors->updateEmployee->first('edit_account_type') }}
+                        </strong>
                     </span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->updateEmployee->first('personal_email') ? ' form-error update' : '')}} floating">
-                    <input id="" type="email" name="personal_email" class="form-control">
+                <div class="form-material form-material-primary {{ $errors->updateEmployee->first('edit_personal_email') ? 'form-error update' : '' }} floating">
+                    <input id="" type="email" name="edit_personal_email" class="form-control" value="{{ old('edit_personal_email') }}">
                     <label for="personal_email">Email</label>
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->updateEmployee->first('personal_email') }}</strong>
+                        <strong>{{ $errors->updateEmployee->first('edit_personal_email') }}</strong>
                     </span>
                 </div>
             </div>
@@ -282,8 +285,8 @@
         <h5 class="mb-1">Personal Info</h5>
         <div class="form-group row mb-4">
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->updateEmployee->first('first_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="" name="first_name">
+                <div class="form-material form-material-primary {{ $errors->updateEmployee->first('first_name') ? 'form-error update' : '' }} floating">
+                    <input type="text" class="form-control" id="" name="edit_first_name" value="{{ old('edit_first_name') }}">
                     <label for="first_name">First Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->updateEmployee->first('first_name') }}</strong>
@@ -291,8 +294,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->updateEmployee->first('middle_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="" name="middle_name">
+                <div class="form-material form-material-primary {{ $errors->updateEmployee->first('edit_middle_name') ?  'form-error update' : '' }} floating">
+                    <input type="text" class="form-control" id="" name="edit_middle_name" value="{{ old('edit_middle_name') }}">
                     <label for="middle_name">Middle Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->updateEmployee->first('middle_name') }}</strong>
@@ -300,8 +303,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary {{($errors->updateEmployee->first('last_name') ? ' form-error update' : '')}} floating">
-                    <input type="text" class="form-control" id="" name="last_name">
+                <div class="form-material form-material-primary {{ $errors->updateEmployee->first('edit_last_name') ? 'form-error update' : '' }} floating">
+                    <input type="text" class="form-control" id="" name="edit_last_name" value="{{ old('edit_last_name') }}">
                     <label for="last_name">Last Name</label>
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->updateEmployee->first('last_name') }}</strong>
@@ -309,20 +312,33 @@
                 </div>
             </div>
         </div>
-        <h5 class="mb-1">Address</h5>
+        <div class="row">
+            <div class="col">
+                <h5 class="mb-1">Address</h5>
+            </div>
+            <div class="col text-right">
+                <label class="css-control css-control-sm css-control-primary css-switch">
+                    <input type="checkbox" class="css-control-input" id="toggleAddressEdit">
+                    <span class="css-control-indicator"></span> Edit address
+                </label>
+            </div>
+        </div>
         <div class="form-group row">
             <div class="col">
-                <div class="form-material form-material-primary floating">
-                    <input type="text" class="form-control" id="" name="address">
+                <div class="form-material form-material-primary floating {{ $errors->updateEmployee->first('edit_address') ? 'form-error update' : '' }}">
+                    <input type="text" class="form-control" id="" name="edit_address" value="{{ old('edit_address') }}">
                     <label for="address">Street address</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_address') }}</strong>
+                    </span>
                 </div>
             </div>
         </div>
         <div class="form-group row">
             <div class="col-md-6">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="" name="region">
-                        <option hidden="">-- Choose Region --</option>
+                    <select class="form-control" id="edit_region" name="edit_region" data-old-edit-region="{{ old('edit_region') ? old('edit_region') : '' }}">
+                        <option value="" hidden="">-- Choose Region --</option>
                         @forelse($regions as $region)
                             <option value="{{ $region->region_code }}">{{ $region->region_description }}</option>
                         @empty
@@ -330,38 +346,53 @@
                         @endforelse
                     </select>
                     <label for="region">Region</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_region') }}</strong>
+                    </span>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="" name="province" disabled="">
-                        <option hidden="">-- Select Region first --</option>
+                    <select class="form-control" id="edit_province" name="edit_province">
+                        <option value="" hidden="">-- Select Region first --</option>
                     </select>
                     <label for="province">Province</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_province') }}</strong>
+                    </span>
                 </div>
             </div>
         </div>
         <div class="form-group row">
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="" name="municipality" disabled="">
-                        <option hidden="">-- Select Province first --</option>
+                    <select class="form-control" id="edit_municipality" name="edit_municipality">
+                        <option value="" hidden="">-- Select Province first --</option>
                     </select>
                     <label for="municipality">Municipality / City</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_municipality') }}</strong>
+                    </span>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <select class="form-control" id="" name="brgy" disabled="">
-                        <option hidden="">-- Select a Municipality / City first --</option>
+                    <select class="form-control" id="edit_brgy" name="edit_brgy" >
+                        <option value="" hidden="">-- Select a Municipality / City first --</option>
                     </select>
                     <label for="brgy">Baranggay</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_brgy') }}</strong>
+                    </span>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-material form-material-primary floating">
-                    <input type="text" class="form-control" id="" name="zip_code">
+                <div class="form-material form-material-primary floating {{ $errors->updateEmployee->first('edit_zip_code') ? 'form-error update' : '' }}">
+                    <input type="text" class="form-control" id="edit_zip_code" name="edit_zip_code" value="{{ old('edit_zip_code') }}">
                     <label for="zip_code">Zip Code</label>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->updateEmployee->first('edit_zip_code') }}</strong>
+                    </span>
                 </div>
             </div>
         </div>

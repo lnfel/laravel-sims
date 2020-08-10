@@ -138,14 +138,12 @@ class Employee extends Controller
         $employee->last_name = request('last_name');
         $employee->middle_name = request('middle_name');
         $employee->personal_email = request('personal_email');
-        //if (request('address') != "" && request('address') != " ") {
-            $employee->address = request('address');
-            $employee->region = request('region');
-            $employee->province = request('province');
-            $employee->municipality = request('municipality');
-            $employee->brgy = request('brgy');
-            $employee->zip_code = request('zip_code');
-        //}
+        $employee->address = request('address');
+        $employee->region = request('region');
+        $employee->province = request('province');
+        $employee->municipality = request('municipality');
+        $employee->brgy = request('brgy');
+        $employee->zip_code = request('zip_code');
         $employee->save();
 
         $account = new Account();
@@ -194,34 +192,47 @@ class Employee extends Controller
      */
     public function update(Request $request, EmployeeModel $employee)
     {
-        //EmployeeModel::where('id', request('employee_id'))->firstOrFail();
-
         $validator = Validator::make($request->all(), [
-            'number' => 'required',
-            'account_type' => [
+            'edit_number' => 'required',
+            'edit_account_type' => [
                 'required',
                 Rule::notIn([0]),
             ],
-            'first_name' => 'required|alpha',
-            'last_name' => 'required|alpha',
-            'middle_name' => 'required|alpha',
-            'personal_email' => 'required|email|unique:employees,personal_email',
-            'address' => 'sometimes|required_with:region,province,municipality,brgy,zip_code',
-            'region' => 'sometimes|required_with:address,zip_code',
-            'province' => 'sometimes|required_with:region,address,zip_code',
-            'municipality' => 'sometimes|required_with:address,region,province,zip_code',
-            'brgy' => 'sometimes|required_with:address,region,province,municipality,zip_code',
-            'zip_code' => 'sometimes|required_with:address,region,province,municipality,brgy',
+            'edit_first_name' => 'required|alpha',
+            'edit_last_name' => 'required|alpha',
+            'edit_middle_name' => 'required|alpha',
+            'edit_personal_email' => 'required|email',
+            'edit_address' => 'sometimes|required_with:edit_region,edit_province,edit_municipality,edit_brgy,edit_zip_code',
+            'edit_region' => 'sometimes|required_with:edit_address,edit_zip_code',
+            'edit_province' => 'sometimes|required_with:edit_region,edit_address,edit_zip_code',
+            'edit_municipality' => 'sometimes|required_with:edit_address,edit_region,edit_province,edit_zip_code',
+            'edit_brgy' => 'sometimes|required_with:edit_address,edit_region,edit_province,edit_municipality,edit_zip_code',
+            'edit_zip_code' => 'sometimes|required_with:edit_address,edit_region,edit_province,edit_municipality,edit_brgy',
         ],
         [
             'required_with' => 'Address must be complete.',
-            'personal_email.required' => 'The email field is required.',
-            'personal_email.unique' => 'Email has already been taken.'
+            'edit_personal_email.required' => 'The email field is required.',
+            'edit_personal_email.unique' => 'Email has already been taken.'
         ])->validateWithBag('updateEmployee');
 
-        $employee->update($validator);
+        $employee->first_name = request('edit_first_name');
+        $employee->middle_name = request('edit_middle_name');
+        $employee->last_name = request('edit_last_name');
+        $employee->personal_email = request('edit_personal_email');
+        $employee->address = request('edit_address');
+        $employee->region = request('edit_region');
+        $employee->province = request('edit_province');
+        $employee->municipality = request('edit_municipality');
+        $employee->brgy = request('edit_brgy');
+        $employee->zip_code = request('edit_zip_code');
+        $employee->save();
 
-        return redirect()->back()->withErrors($validator, 'updateEmployee');
+        $account = Account::where('employee_id', request('employee_id'))->first();
+        $account->account_type_id = request('edit_account_type');
+        $account->email = $employee->personal_email;
+        $account->save();
+
+        return redirect('employees')->withErrors($validator, 'updateEmployee')->withInput($request->only('edit_personal_email', 'edit_first_name', 'edit_middle_name', 'edit_last_name', 'edit_address', 'edit_account_type'))->with('employee_id', $employee->id);
     }
 
     /**

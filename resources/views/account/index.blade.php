@@ -138,7 +138,7 @@
 				<!-- Employee hasOne account and Account belongsTo Status -->
 				<!-- Status then holds the name of status which is either Active or Inactive -->
 				<!-- https://laravel.com/docs/7.x/eloquent-relationships -->
-				<li>Account status: {{ $employee->account->status->name ?? "No related account and employee yet, create an employee to see status." }}</li>
+				<li>Account status: <span class="badge badge-{{ $employee->account ? 'success' : 'danger' }}">{{ $employee->account ? $employee->account->status->name : 'Inactive' }}</span></li>
 				<br>
 			@empty
 				<li>Employee table is empty</li>

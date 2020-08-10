@@ -10,13 +10,16 @@ class Employee extends Model
 	use SoftDeletes;
 	
   protected $fillable = [
-		'employee_number',
-		'employee_type_id',
-		'department_id',
-		'position',
-		'last_name',
-		'fisrt_name',
+		'personal_email',
+		'first_name',
 		'middle_name',
+		'last_name',
+		'address',
+		'region',
+		'province',
+		'municipality',
+		'brgy',
+		'zip_code',
   ];
 
   public function account() {

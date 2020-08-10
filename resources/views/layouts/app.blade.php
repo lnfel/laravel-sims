@@ -149,10 +149,30 @@
 	  <script type="text/javascript">
     $(document).ready(function()
     {
-      $.fn.getAccountTypes = function() {
-        $.ajax({
+      $.fn.toggleAddressEdit = function(checked) {
+        switch(checked) {
+          case true:
+            $('#update-employee').find('select[name="edit_region"]').on('change', function(){
+              var region_code = $(this).val();
+              $.fn.getProvinces(region_code, exists = false, modal_id = "update-employee");
+            });
 
-        });
+            $('#update-employee').find('select[name="edit_province"]').on('change', function(){
+              var province_code = $(this).val();
+              $.fn.getCities(province_code, exists = false, modal_id = "update-employee");
+            });
+
+            $('#update-employee').find('select[name="edit_municipality"]').on('change', function(){
+              var city_municipality_code = $(this).val();
+              $.fn.getBarangays(city_municipality_code, exists = false, modal_id = "update-employee");
+            });
+            break;
+          default:
+            $('#update-employee').find('select[name="edit_region"]').unbind();
+            $('#update-employee').find('select[name="edit_province"]').unbind();
+            $('#update-employee').find('select[name="edit_municipality"]').unbind();
+            break;
+        }
       }
 
       $.fn.getEmployeeData = function(employee_id) {
@@ -177,46 +197,72 @@
             //$('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee']['id'] +'">');
 
             // Account Info
-            $('#edit-employee').find('select[name="account_type"]').val(data['account'][0]['account_type_id']).trigger('change');
-            $('#edit-employee').find('input[name="personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('select[name="edit_account_type"]').val(data['account'][0]['account_type_id']).trigger('change');
+            $('#edit-employee').find('input[name="edit_personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
 
             // Personal Info
-            $('#edit-employee').find('input[name="first_name"]').val(data['employee']['first_name']).parent('.form-material').addClass('open');
-            $('#edit-employee').find('input[name="middle_name"]').val(data['employee']['middle_name']).parent('.form-material').addClass('open');
-            $('#edit-employee').find('input[name="last_name"]').val(data['employee']['last_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="edit_first_name"]').val(data['employee']['first_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="edit_middle_name"]').val(data['employee']['middle_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="edit_last_name"]').val(data['employee']['last_name']).parent('.form-material').addClass('open');
 
             //var response = JSON.parse(data);
             //console.log(response);
-          }
+          },
+          complete:function(data){
+            console.log("Employee request done, checking for address...");
+            console.log(data.responseJSON['employee']);
+            var employee = data.responseJSON['employee'];
+            var account = data.responseJSON['account'];
+            console.log(employee['region']);
+            if (employee['region'] == null && employee['address'] == null) {
+              console.log("No address associated with current employee.");
+              var exists = false;
+              var modal_id = "update-employee";
+
+              $('#update-employee').find('select[name="edit_region"]').on('change', function(){
+              var region_code = $(this).val();
+                $.fn.getProvinces(region_code, exists, modal_id);
+              });
+
+              $('#update-employee').find('select[name="edit_province"]').on('change', function(){
+                var province_code = $(this).val();
+                $.fn.getCities(province_code, exists, modal_id);
+              });
+
+              $('#update-employee').find('select[name="edit_municipality"]').on('change', function(){
+                var city_municipality_code = $(this).val();
+                $.fn.getBarangays(city_municipality_code, exists, modal_id);
+              });
+            } else {
+              console.log("Associated address found.");
+              var exists = true;
+              var modal_id = "update-employee";
+              var testRegion = "04";
+              var region_code = employee['region'];
+              var testProvince = "0458";
+              var province_code = employee['province'];
+              var testCity = "045813";
+              var city_municipality_code = employee['municipality'];
+              var testBarangay = "045813001";
+              var brgy_code = employee['brgy'];
+              var testZipCode = "1920";
+              var zip_code = employee['zip_code'];
+
+              $('#edit-employee').find('input[name="edit_address"]').val(employee['address']).parent('.form-material').addClass('open');
+              $('#edit-employee').find('input[name="edit_zip_code"]').val(zip_code).parent('.form-material').addClass('open');
+
+              if (region_code != null && region_code != "") {
+                $('#edit-employee').find('select[name="edit_region"]').val(region_code).change();
+
+                $.fn.getProvinces(region_code, exists, modal_id, testProvince);
+                $.fn.getCities(province_code, exists, modal_id, testCity);
+                $.fn.getBarangays(city_municipality_code, exists, modal_id, brgy_code);
+              }
+            } // end of else
+          } // end of complete function
         })
         .done(function(data) {
-          console.log("Employee request done, checking for address...");
-          if (data['employee']['region'] != null) {
-            console.log("Associated address found.");
-          } else {
-            console.log("No address associated with current employee.");
-            var exists = true;
-            var modal_id = "update-employee";
-            var testRegion = "04";
-            var region_code = testRegion;
-            var testProvince = "0458";
-            var province_code = testProvince;
-            var testCity = "045813";
-            var city_municipality_code = testCity;
-            var testBarangay = "045813001";
-            var testZipCode = "1920";
-
-            //$('#edit-employee').find('select[name="region"]').val(data['employee']['region']).change();
-            $('#edit-employee').find('select[name="region"]').val(testRegion).change();
-            if (exists) {
-              $('#edit-employee').find('input[name="address"]').val(data['employee']['address']).parent('.form-material').addClass('open');
-              $.fn.getProvinces(region_code, exists, modal_id, testProvince);
-              $.fn.getCities(province_code, exists, modal_id, testCity);
-              $.fn.getBarangays(city_municipality_code, exists, modal_id, testBarangay);
-              //$('#edit-employee').find('input[name="zip_code"]').val(data['employee']['zip_code']).parent('.form-material').addClass('open');
-              $('#edit-employee').find('input[name="zip_code"]').val(testZipCode).parent('.form-material').addClass('open');
-            }
-          }
+          return data;
         });
       }
 
@@ -232,23 +278,27 @@
           dataType : "json",
           success:function(data)
           {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
             // get old value
             var oldProvince = $('#province').data('old-province');
             console.log(oldProvince);
             console.log("Getting province...");
             console.table(data);
-            $('#' + modal_id).find('select[name="province"]').prop('readonly', false);
-            $('#' + modal_id).find('select[name="province"]').empty();
-            $('#' + modal_id).find('select[name="province"]').append('<option value="" hidden>-- Provinces loaded --</option>');
+            $('#' + modal_id).find('select[name="'+edit+'province"]').prop('disabled', false);
+            $('#' + modal_id).find('select[name="'+edit+'province"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'province"]').append('<option value="" hidden>-- Provinces loaded --</option>');
             $.each(data, function(key, value){
-               $('#' + modal_id).find('select[name="province"]').append('<option value="'+ key +'">'+ value +'</option>');
+               $('#' + modal_id).find('select[name="'+edit+'province"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
             console.log("Populated data on: " + modal_id);
           },
           complete:function(data){
             if (exists) {
-              //$('#edit-employee').find('select[name="province"]').val(data[employee][0]['province']).change();
-              $('#' + modal_id).find('select[name="province"]').val(testProvince).change();
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'province"]').val(testProvince).change();
             }
 
             // check if there are old values
@@ -270,19 +320,23 @@
           dataType : "json",
           success:function(data)
           {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
             console.log("Getting Cities and Municipalities");
             console.table(data);
-            $('#' + modal_id).find('select[name="municipality"]').prop('readonly', false);
-            $('#' + modal_id).find('select[name="municipality"]').empty();
-            $('#' + modal_id).find('select[name="municipality"]').append('<option value="" hidden>-- Cities and Municipality loaded --</option>');
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').prop('readonly', false);
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').append('<option value="" hidden>-- Cities and Municipality loaded --</option>');
             $.each(data, function(key, value){
-               $('#' + modal_id).find('select[name="municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
+               $('#' + modal_id).find('select[name="'+edit+'municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
           },
           complete:function(data){
             if (exists) {
-              //$('#edit-employee').find('select[name="municipality"]').val(data[employee][0]['municipality']).change();
-              $('#' + modal_id).find('select[name="municipality"]').val(testCity).change();
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'municipality"]').val(testCity).change();
             }
 
             // check if there are old values
@@ -304,19 +358,23 @@
           dataType : "json",
           success:function(data)
           {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
             console.log("Getting Barangays");
             console.table(data);
-            $('#' + modal_id).find('select[name="brgy"]').prop('readonly', false);
-            $('#' + modal_id).find('select[name="brgy"]').empty();
-            $('#' + modal_id).find('select[name="brgy"]').append('<option value="" hidden>-- Baranggays loaded --</option>');
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').prop('readonly', false);
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').append('<option value="" hidden>-- Baranggays loaded --</option>');
             $.each(data, function(key, value){
-               $('#' + modal_id).find('select[name="brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
+               $('#' + modal_id).find('select[name="'+edit+'brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
             });
           },
           complete:function(data){
             if (exists) {
-              //$('#edit-employee').find('select[name="brgy"]').val(data[employee][0]['brgy']).change();
-              $('#' + modal_id).find('select[name="brgy"]').val(testBarangay).change();
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'brgy"]').val(testBarangay).change();
             }
 
             // check if there are old values
@@ -337,12 +395,21 @@
 
         if (id === "update-employee") {
           var employee_id = $(e.relatedTarget).data('target-id');
-          //$('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
-          //$('#edit-number').val(employee_number);
-          //$('#edit-number').prop('readonly', true);
-          $('#edit-employee').find('select').prop('disabled', false);
+          if (employee_id != '' && employee_id != null) {
+            $('#edit-employee').find('#employee_id').val(employee_id);
+          } else {
+            employee_id = $('#employee_id').val();
+          }
+
+          $('#edit-employee').find('select').prop('readonly', false);
           $('#edit-employee').find('select').parent('.form-material').addClass('open');
           $.fn.getEmployeeData(employee_id);
+
+          // check if there are old values
+          if ($('.edit_region').data('old-edit-region') != "" && $('.edit_region').data('old-edit-region') != null) {
+            console.log('Old region data: ' + $('.edit_region').data('old-edit-region'));
+            $(".edit_region").val($(".edit_region").data('old-edit-region')).trigger('change');
+          }
         } else if (id === "store-employee") {
           var exists = false;
           var modal_id = "store-employee";
@@ -389,11 +456,30 @@
         $(this).find('form')[0].reset();
         //$(this).find('#edit-employee').find('select').empty();
         $('form').find('.open').removeClass('open').find('select').parent('.form-material').addClass('open');
-        $('.modal').find('select').not('[name="region"], [name="account_type"]').empty();
-        $('.modal').find('select[name="province"]').append('<option value="" hidden>-- Select Region first --</option>');
-        $('.modal').find('select[name="municipality"]').append('<option value="" hidden>-- Select Province first --</option>');
-        $('.modal').find('select[name="brgy"]').append('<option value="" hidden>-- Select a Municipality / City first --</option>');
-        $('.modal').find('select').not('[name="region"], [name="account_type"]').prop('disabled', true);
+        $('.modal').find('select').not('[name="region"], [name="edit_region"], [name="account_type"], [name="edit_account_type"]' ).empty();
+        $('.modal').find('select[name="province"], select[name="edit_province"]').append('<option value="" hidden>-- Select Region first --</option>');
+        $('.modal').find('select[name="municipality"], select[name="edit_municipality"]').append('<option value="" hidden>-- Select Province first --</option>');
+        $('.modal').find('select[name="brgy"], select[name="edit_brgy"]').append('<option value="" hidden>-- Select a Municipality / City first --</option>');
+        $('.modal').find('select').not('[name="region"], [name="edit_region"], [name="account_type"], [name="edit_account_type"]').prop('readonly', true);
+
+        $findError = $('form').find('div').hasClass('form-error');
+        switch($findError) {
+          case true:
+            $('.form-error').removeClass('form-error store update').children('span').html("");
+            break;
+          default:
+            // do nothing
+            break;
+        }
+
+        // disable address listeners for edit
+        var checked = false;
+        $.fn.toggleAddressEdit(checked);
+      });
+
+      $('#toggleAddressEdit').on('change', function(e) {
+        var checked = $(this).prop('checked');
+        $.fn.toggleAddressEdit(checked);
       });
 
       // clear error messages when user fills out the specified field with error
