@@ -27,6 +27,19 @@
   <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
   <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
   <!-- END Stylesheets -->
+  <style type="text/css">
+    .form-material.form-error .form-control {
+      box-shadow: 0 1px 0 #db4343;
+    }
+
+    .form-material.form-error label {
+      color: #db4343;
+    }
+
+    .form-material .form-control[readonly] {
+      background-color: transparent;
+    }
+  </style>
 </head>
 <body>
 	@auth
@@ -127,6 +140,7 @@
     <script src="{{ asset('codebase/assets/js/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('codebase/assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
 
 	  <!-- Page JS Code -->
 	  <script src="{{ asset('codebase/assets/js/pages/be_pages_dashboard.min.js') }}"></script>
@@ -136,89 +150,381 @@
 	  <script type="text/javascript">
     $(document).ready(function()
     {
-    	console.log("jQuery ready");
-    	// Get Province
-      $('select[name="region"]').on('change', function(){
-         var region_code = $(this).val();
-         console.log("Selected region: " + region_code);
-         if(region_code)
-         {
-            $.ajax({
-               url : '/dropdownlist/getprovinces/' + region_code,
-               type : "GET",
-               dataType : "json",
-               success:function(data)
-               {
-                  console.log(data);
-                  $('select[name="province"]').prop('disabled', false);
-                  $('select[name="province"]').empty();
-                  $.each(data, function(key, value){
-                     $('select[name="province"]').append('<option value="'+ key +'">'+ value +'</option>');
-                  });
-               }
+      $.fn.toggleAddressEdit = function(checked) {
+        switch(checked) {
+          case true:
+            $('#update-employee').find('select[name="edit_region"]').on('change', function(){
+              var region_code = $(this).val();
+              $.fn.getProvinces(region_code, exists = false, modal_id = "update-employee");
             });
-         }
-         else
-         {
-            $('select[name="province"]').empty();
-            $('select[name="province"]').prop('disabled', 'disabled');
-         }
+
+            $('#update-employee').find('select[name="edit_province"]').on('change', function(){
+              var province_code = $(this).val();
+              $.fn.getCities(province_code, exists = false, modal_id = "update-employee");
+            });
+
+            $('#update-employee').find('select[name="edit_municipality"]').on('change', function(){
+              var city_municipality_code = $(this).val();
+              $.fn.getBarangays(city_municipality_code, exists = false, modal_id = "update-employee");
+            });
+            break;
+          default:
+            $('#update-employee').find('select[name="edit_region"]').unbind();
+            $('#update-employee').find('select[name="edit_province"]').unbind();
+            $('#update-employee').find('select[name="edit_municipality"]').unbind();
+            break;
+        }
+      }
+
+      $.fn.getEmployeeData = function(employee_id) {
+        console.log("Employee number: " + employee_id);
+
+        $.ajax({
+          url: '/employees/' + employee_id + '/edit',
+          type: "GET",
+          dataType: "json",
+          success: function(data) {
+            console.log("Current Employee Data");
+            console.table(data['account'], ["id", "username", "email", "account_type_id"]);
+            console.table(data['employee'], ["id", "number", "first_name", "last_name", "address", "personal_email"]);
+            console.log("Account Type ID");
+            console.log(data['account'][0]['account_type_id']);
+
+            $('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
+            $('#edit-number').val(data['employee']['number']);
+            $('#edit-number').prop('readonly', true);
+
+            $('#edit-employee').prop('action', '/employees/' + data['employee']['id']);
+            //$('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee']['id'] +'">');
+
+            // Account Info
+            $('#edit-employee').find('select[name="edit_account_type"]').val(data['account'][0]['account_type_id']).trigger('change');
+            $('#edit-employee').find('input[name="edit_personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
+
+            // Personal Info
+            $('#edit-employee').find('input[name="edit_first_name"]').val(data['employee']['first_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="edit_middle_name"]').val(data['employee']['middle_name']).parent('.form-material').addClass('open');
+            $('#edit-employee').find('input[name="edit_last_name"]').val(data['employee']['last_name']).parent('.form-material').addClass('open');
+
+            //var response = JSON.parse(data);
+            //console.log(response);
+          },
+          complete:function(data){
+            console.log("Employee request done, checking for address...");
+            console.log(data.responseJSON['employee']);
+            var employee = data.responseJSON['employee'];
+            var account = data.responseJSON['account'];
+            console.log('Looking for region data...');
+            console.log(employee['region']);
+            if (employee['region'] == null && employee['address'] == null) {
+              console.log("No address associated with current employee.");
+              var exists = false;
+              var modal_id = "update-employee";
+
+              $('#update-employee').find('select[name="edit_region"]').on('change', function(){
+              var region_code = $(this).val();
+                $.fn.getProvinces(region_code, exists, modal_id);
+              });
+
+              $('#update-employee').find('select[name="edit_province"]').on('change', function(){
+                var province_code = $(this).val();
+                $.fn.getCities(province_code, exists, modal_id);
+              });
+
+              $('#update-employee').find('select[name="edit_municipality"]').on('change', function(){
+                var city_municipality_code = $(this).val();
+                $.fn.getBarangays(city_municipality_code, exists, modal_id);
+              });
+            } else {
+              console.log("Associated address found.");
+              var exists = true;
+              var modal_id = "update-employee";
+              var testRegion = "04";
+              var region_code = employee['region'];
+              var testProvince = "0458";
+              var province_code = employee['province'];
+              var testCity = "045813";
+              var city_municipality_code = employee['municipality'];
+              var testBarangay = "045813001";
+              var brgy_code = employee['brgy'];
+              var testZipCode = "1920";
+              var zip_code = employee['zip_code'];
+
+              $('#edit-employee').find('input[name="edit_address"]').val(employee['address']).parent('.form-material').addClass('open');
+              $('#edit-employee').find('input[name="edit_zip_code"]').val(zip_code).parent('.form-material').addClass('open');
+
+              if (region_code != null && region_code != "") {
+                $('#edit-employee').find('select[name="edit_region"]').val(region_code).change();
+
+                $.fn.getProvinces(region_code, exists, modal_id, province_code);
+                $.fn.getCities(province_code, exists, modal_id, city_municipality_code);
+                $.fn.getBarangays(city_municipality_code, exists, modal_id, brgy_code);
+              }
+            } // end of else
+          } // end of complete function
+        })
+        .done(function(data) {
+          return data;
+        });
+      }
+
+      $.fn.getProvinces = function(region_code, exists, modal_id, province_code) {
+        console.log("Checking modal_id...")
+        console.log(modal_id);
+        console.log(region_code);
+        console.log(exists);
+        console.log(province_code);
+        $.ajax({
+          url : '/dropdownlist/getprovinces/' + region_code,
+          type : "GET",
+          dataType : "json",
+          success:function(data)
+          {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
+            // get old value
+            var oldProvince = $('#province').data('old-province');
+            console.log('Checking data-old-province for previous request...');
+            console.log(oldProvince);
+            console.log("Getting province...");
+            console.table(data);
+            $('#' + modal_id).find('select[name="'+edit+'province"]').prop('disabled', false);
+            $('#' + modal_id).find('select[name="'+edit+'province"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'province"]').append('<option value="" hidden>-- Provinces loaded --</option>');
+            $.each(data, function(key, value){
+               $('#' + modal_id).find('select[name="'+edit+'province"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+            console.log("Populated data on: " + modal_id);
+          },
+          complete:function(data){
+            if (exists) {
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'province"]').val(province_code).change();
+            }
+
+            // check if there are old values
+            if ($('#province').data('old-province') != "" && $('#province').data('old-province') != null) {
+              console.log('Old province data: ' + $('#province').data('old-province'));
+              $("#province").val($("#province").data('old-province')).trigger('change');
+            }
+          }
+        })
+        .done(function(data){
+          return data;
+        });
+      }
+
+      $.fn.getCities = function(province_code, exists, modal_id, city_municipality_code) {
+        $.ajax({
+          url : '/dropdownlist/getcities/' + province_code,
+          type : "GET",
+          dataType : "json",
+          success:function(data)
+          {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
+            console.log("Getting Cities and Municipalities");
+            console.table(data);
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').prop('readonly', false);
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'municipality"]').append('<option value="" hidden>-- Cities and Municipality loaded --</option>');
+            $.each(data, function(key, value){
+               $('#' + modal_id).find('select[name="'+edit+'municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+          },
+          complete:function(data){
+            if (exists) {
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'municipality"]').val(city_municipality_code).change();
+            }
+
+            // check if there are old values
+            if ($('#municipality').data('old-municipality') != "" && $('#municipality').data('old-municipality') != null) {
+              console.log('Old municipality data: ' + $('#municipality').data('old-municipality'));
+              $("#municipality").val($("#municipality").data('old-municipality')).trigger('change');
+            }
+          }
+        })
+        .done(function(data){
+          return data;
+        });
+      }
+
+      $.fn.getBarangays = function(city_municipality_code, exists, modal_id, testBarangay) {
+        $.ajax({
+          url : '/dropdownlist/getbarangays/' + city_municipality_code,
+          type : "GET",
+          dataType : "json",
+          success:function(data)
+          {
+            if (modal_id == "update-employee")
+            {
+              var edit = "edit_";
+            } else {var edit = "";}
+            console.log("Getting Barangays");
+            console.table(data);
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').prop('readonly', false);
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').empty();
+            $('#' + modal_id).find('select[name="'+edit+'brgy"]').append('<option value="" hidden>-- Baranggays loaded --</option>');
+            $.each(data, function(key, value){
+               $('#' + modal_id).find('select[name="'+edit+'brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+          },
+          complete:function(data){
+            if (exists) {
+              var edit = "edit_";
+              $('#' + modal_id).find('select[name="'+edit+'brgy"]').val(testBarangay).change();
+            }
+
+            // check if there are old values
+            if ($('#brgy').data('old-brgy') != "" && $('#brgy').data('old-brgy') != null) {
+              console.log('Old brgy data: ' + $('#brgy').data('old-brgy'));
+              $("#brgy").val($("#brgy").data('old-brgy')).trigger('change');
+            }
+          }
+        })
+        .done(function(data){
+          return data;
+        });
+      }
+    	
+      $('.modal').on('shown.bs.modal', function(e) {
+        var id = $(this).attr('id');
+        console.log(id);
+
+        if (id === "update-employee") {
+          var employee_id = $(e.relatedTarget).data('target-id');
+          if (employee_id != '' && employee_id != null) {
+            $('#edit-employee').find('#employee_id').val(employee_id);
+          } else {
+            employee_id = $('#employee_id').val();
+          }
+
+          $('#edit-employee').find('select').prop('readonly', false);
+          $('#edit-employee').find('select').parent('.form-material').addClass('open');
+          $.fn.getEmployeeData(employee_id);
+
+          // check if there are old values
+          if ($('.edit_region').data('old-edit-region') != "" && $('.edit_region').data('old-edit-region') != null) {
+            console.log('Old region data: ' + $('.edit_region').data('old-edit-region'));
+            $(".edit_region").val($(".edit_region").data('old-edit-region')).trigger('change');
+          }
+        } else if (id === "store-employee") {
+          var exists = false;
+          var modal_id = "store-employee";
+          $('#number').parent('.form-material').addClass('open');
+
+          $('#store-employee').find('select[name="region"]').on('change', function(){
+            var region_code = $(this).val();
+            $.fn.getProvinces(region_code, exists, modal_id);
+          });
+
+          $('#store-employee').find('select[name="province"]').on('change', function(){
+            var province_code = $(this).val();
+            $.fn.getCities(province_code, exists, modal_id);
+          });
+
+          $('#store-employee').find('select[name="municipality"]').on('change', function(){
+            var city_municipality_code = $(this).val();
+            $.fn.getBarangays(city_municipality_code, exists, modal_id);
+          });
+
+          // check if there are old values
+          if ($('#region').data('old-region') != "" && $('#region').data('old-region') != null) {
+            console.log('Old region data: ' + $('#region').data('old-region'));
+            $("#region").val($("#region").data('old-region')).trigger('change');
+          }
+        } else {
+          var employee_id = $(e.relatedTarget).data('target-id');
+          var employee_full_name = $(e.relatedTarget).data('full-name');
+          $('#delete-employee').prop('action', '/employees/' + employee_id);
+          $('#delete-employee').prepend('<input type="hidden" name="employee_id" value="'+ employee_id +'">');
+          $('#employee').find("b").html(employee_full_name);
+        }
+
+        // Raise the label if modal opened with input having values or form returned old values
+        $(this).find('input').each(function(){
+          if ($(this).val() != "" && $(this).val() != " ") {
+            $(this).parent('.form-material').addClass('open');
+          }
+        });
       });
-      // Get Municipality / City
-      $('select[name="province"]').on('change', function(){
-         var province_code = $(this).val();
-         console.log("Selected province: " + province_code);
-         if(province_code)
-         {
-            $.ajax({
-               url : '/dropdownlist/getcities/' + province_code,
-               type : "GET",
-               dataType : "json",
-               success:function(data)
-               {
-                  console.log(data);
-                  $('select[name="municipality"]').prop('disabled', false);
-                  $('select[name="municipality"]').empty();
-                  $.each(data, function(key, value){
-                     $('select[name="municipality"]').append('<option value="'+ key +'">'+ value +'</option>');
-                  });
-               }
-            });
-         }
-         else
-         {
-            $('select[name="municipality"]').empty();
-            $('select[name="municipality"]').prop('disabled', 'disabled');
-         }
+
+      // clear edit form fields
+      $('.modal').on('hidden.bs.modal', function(e) {
+        $(this).find('form')[0].reset();
+        //$(this).find('#edit-employee').find('select').empty();
+        $('form').find('.open').removeClass('open').find('select').parent('.form-material').addClass('open');
+        $('.modal').find('select').not('[name="region"], [name="edit_region"], [name="account_type"], [name="edit_account_type"]' ).empty();
+        $('.modal').find('select[name="province"], select[name="edit_province"]').append('<option value="" hidden>-- Select Region first --</option>');
+        $('.modal').find('select[name="municipality"], select[name="edit_municipality"]').append('<option value="" hidden>-- Select Province first --</option>');
+        $('.modal').find('select[name="brgy"], select[name="edit_brgy"]').append('<option value="" hidden>-- Select a Municipality / City first --</option>');
+        $('.modal').find('select').not('[name="region"], [name="edit_region"], [name="account_type"], [name="edit_account_type"]').prop('readonly', true);
+
+        $findError = $('form').find('div').hasClass('form-error');
+        switch($findError) {
+          case true:
+            $('.form-error').removeClass('form-error store update').children('span').html("");
+            break;
+          default:
+            // do nothing
+            break;
+        }
+
+        // disable address listeners for edit
+        var checked = false;
+        $.fn.toggleAddressEdit(checked);
       });
-      // Get Barangays
-      $('select[name="municipality"]').on('change', function(){
-         var municipality_code = $(this).val();
-         console.log("Selected municipality / city: " + municipality_code);
-         if(municipality_code)
-         {
-            $.ajax({
-               url : '/dropdownlist/getbarangays/' + municipality_code,
-               type : "GET",
-               dataType : "json",
-               success:function(data)
-               {
-                  console.log(data);
-                  $('select[name="brgy"]').prop('disabled', false);
-                  $('select[name="brgy"]').empty();
-                  $.each(data, function(key, value){
-                     $('select[name="brgy"]').append('<option value="'+ key +'">'+ value +'</option>');
-                  });
-               }
-            });
-         }
-         else
-         {
-            $('select[name="brgy"]').empty();
-            $('select[name="brgy"]').prop('disabled', 'disabled');
-         }
+
+      $('#toggleAddressEdit').on('change', function(e) {
+        var checked = $(this).prop('checked');
+        $.fn.toggleAddressEdit(checked);
+      });
+
+      // clear error messages when user fills out the specified field with error
+      $('.form-error').on('change', function() {
+        $(this).removeClass('form-error').children('span').html("");
+      });
+
+      // initialize Codebade notify plugin
+      jQuery(function(){ Codebase.helpers('notify'); });
+
+      console.log("jQuery ready");
+
+      window.addEventListener("load", function(){
+        
       });
     });
+    </script>
+
+    <script type="text/javascript">
+      //$(document).ready(function() {
+        // Keep modal open if there are errors
+        $findError = $('form').find('div');
+        if ($findError.hasClass('form-error store')) {
+          $('#store-employee').modal('show');  
+        }
+        
+        if ($findError.hasClass('form-error update')) {
+          $('#update-employee').modal('show');  
+        }
+
+        if ($('#notify').length) {
+          jQuery(function(){
+            Codebase.helpers('notify', {
+                align: 'right',             // 'right', 'left', 'center'
+                from: 'top',                // 'top', 'bottom'
+                type: $('#notify').data('type'),               // 'info', 'success', 'warning', 'danger'
+                icon: 'fa fa-check mr-5',    // Icon class
+                message: '{{ session("success") }}'
+            });
+          });
+        }
+      //});
     </script>
 </body>
 </html>

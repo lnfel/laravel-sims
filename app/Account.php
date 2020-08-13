@@ -6,9 +6,11 @@ use App\Notifications\AccountResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends Authenticatable
 {
+  use SoftDeletes;
   use Notifiable;
 
   protected $guard = 'account';
@@ -54,5 +56,10 @@ class Account extends Authenticatable
 
     public function employee() {
         return $this->belongsTo('App\Employee')->withDefault();
+    }
+
+    // check if logged in user is an Admin
+    public function isAdmin() {
+        return $this->account_type()->where('name', 'Super Admin')->exists();
     }
 }

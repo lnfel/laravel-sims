@@ -33,16 +33,7 @@ class Dashboard extends Controller
 
   public function employee()
   {
-    $user = Auth::user();
-
-    //$response = Http::get('http://bkintanar.site/api/regions');
-
-    $regions = DB::table('philippine_regions')->get();
-    $provinces = DB::table('philippine_provinces')->get();
-    $cities = DB::table('philippine_cities')->get();
-    $barangays = DB::table('philippine_barangays')->get();
-    
-    return view('employee', compact('user', 'regions', 'provinces', 'cities', 'barangays'));
+    // moved to Employee.php
   }
 
   public function getProvinces($region_code)
