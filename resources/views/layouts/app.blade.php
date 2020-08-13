@@ -140,6 +140,7 @@
     <script src="{{ asset('codebase/assets/js/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('codebase/assets/js/plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('codebase/assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
 
 	  <!-- Page JS Code -->
 	  <script src="{{ asset('codebase/assets/js/pages/be_pages_dashboard.min.js') }}"></script>
@@ -213,6 +214,7 @@
             console.log(data.responseJSON['employee']);
             var employee = data.responseJSON['employee'];
             var account = data.responseJSON['account'];
+            console.log('Looking for region data...');
             console.log(employee['region']);
             if (employee['region'] == null && employee['address'] == null) {
               console.log("No address associated with current employee.");
@@ -254,8 +256,8 @@
               if (region_code != null && region_code != "") {
                 $('#edit-employee').find('select[name="edit_region"]').val(region_code).change();
 
-                $.fn.getProvinces(region_code, exists, modal_id, testProvince);
-                $.fn.getCities(province_code, exists, modal_id, testCity);
+                $.fn.getProvinces(region_code, exists, modal_id, province_code);
+                $.fn.getCities(province_code, exists, modal_id, city_municipality_code);
                 $.fn.getBarangays(city_municipality_code, exists, modal_id, brgy_code);
               }
             } // end of else
@@ -266,12 +268,12 @@
         });
       }
 
-      $.fn.getProvinces = function(region_code, exists, modal_id, testProvince) {
+      $.fn.getProvinces = function(region_code, exists, modal_id, province_code) {
         console.log("Checking modal_id...")
         console.log(modal_id);
         console.log(region_code);
         console.log(exists);
-        console.log(testProvince);
+        console.log(province_code);
         $.ajax({
           url : '/dropdownlist/getprovinces/' + region_code,
           type : "GET",
@@ -284,6 +286,7 @@
             } else {var edit = "";}
             // get old value
             var oldProvince = $('#province').data('old-province');
+            console.log('Checking data-old-province for previous request...');
             console.log(oldProvince);
             console.log("Getting province...");
             console.table(data);
@@ -298,7 +301,7 @@
           complete:function(data){
             if (exists) {
               var edit = "edit_";
-              $('#' + modal_id).find('select[name="'+edit+'province"]').val(testProvince).change();
+              $('#' + modal_id).find('select[name="'+edit+'province"]').val(province_code).change();
             }
 
             // check if there are old values
@@ -313,7 +316,7 @@
         });
       }
 
-      $.fn.getCities = function(province_code, exists, modal_id, testCity) {
+      $.fn.getCities = function(province_code, exists, modal_id, city_municipality_code) {
         $.ajax({
           url : '/dropdownlist/getcities/' + province_code,
           type : "GET",
@@ -336,7 +339,7 @@
           complete:function(data){
             if (exists) {
               var edit = "edit_";
-              $('#' + modal_id).find('select[name="'+edit+'municipality"]').val(testCity).change();
+              $('#' + modal_id).find('select[name="'+edit+'municipality"]').val(city_municipality_code).change();
             }
 
             // check if there are old values
@@ -487,6 +490,9 @@
         $(this).removeClass('form-error').children('span').html("");
       });
 
+      // initialize Codebade notify plugin
+      jQuery(function(){ Codebase.helpers('notify'); });
+
       console.log("jQuery ready");
 
       window.addEventListener("load", function(){
@@ -505,6 +511,18 @@
         
         if ($findError.hasClass('form-error update')) {
           $('#update-employee').modal('show');  
+        }
+
+        if ($('#notify').length) {
+          jQuery(function(){
+            Codebase.helpers('notify', {
+                align: 'right',             // 'right', 'left', 'center'
+                from: 'top',                // 'top', 'bottom'
+                type: $('#notify').data('type'),               // 'info', 'success', 'warning', 'danger'
+                icon: 'fa fa-check mr-5',    // Icon class
+                message: '{{ session("success") }}'
+            });
+          });
         }
       //});
     </script>

@@ -29,7 +29,7 @@ class Employee extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // Check if a record exists on accounts table
         $accountExists = \App\Account::exists();
@@ -75,8 +75,9 @@ class Employee extends Controller
         }
 
         $employee = [];
+        $data = $request->session()->all();
         
-        return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types', 'employee', 'employees'));
+        return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types', 'employee', 'employees', 'data'));
     }
 
     /**
@@ -130,7 +131,17 @@ class Employee extends Controller
             'required_with' => 'Address must be complete.',
             'personal_email.required' => 'The email field is required.',
             'personal_email.unique' => 'Email has already been taken.'
-        ])->validateWithBag('storeEmployee');
+        ]);
+
+        //->validateWithBag('storeEmployee')
+        //$request->session()->flash('success', 'Task was successful!');
+
+        if ($validator->fails()) {
+            return redirect()
+                    ->back()
+                    ->withErrors($validator, 'storeEmployee')
+                    ->withInput($request->only('personal_email', 'first_name', 'middle_name', 'last_name', 'address', 'account_type'));
+        }
 
         $employee = new \App\Employee();
         $employee->number = request('number');
@@ -150,11 +161,15 @@ class Employee extends Controller
         $account->username = request('number');
         $account->password = Hash::make('mmm');
         $account->email = $employee->personal_email;
+        $account->account_type_id = request('account_type');
         $account->employee()->associate($employee);
-        //$account->employee->save($employee);
         $account->save();
 
-        return redirect()->back()->withErrors($validator, 'storeEmployee')->withInput($request->only('personal_email', 'first_name', 'middle_name', 'last_name', 'address', 'account_type'));
+        $message = $employee->first_name . ' has been registered as ' . $account->account_type->name;
+
+        //$message = "sample message";
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -213,7 +228,16 @@ class Employee extends Controller
             'required_with' => 'Address must be complete.',
             'edit_personal_email.required' => 'The email field is required.',
             'edit_personal_email.unique' => 'Email has already been taken.'
-        ])->validateWithBag('updateEmployee');
+        ]);
+
+        //->validateWithBag('updateEmployee')
+
+        if ($validator->fails()) {
+            return redirect('employees')
+                    ->withErrors($validator, 'updateEmployee')
+                    ->withInput($request->only('edit_personal_email', 'edit_first_name', 'edit_middle_name', 'edit_last_name', 'edit_address', 'edit_account_type'))
+                    ->with('employee_id', $employee->id);
+        }
 
         $employee->first_name = request('edit_first_name');
         $employee->middle_name = request('edit_middle_name');
@@ -232,7 +256,9 @@ class Employee extends Controller
         $account->email = $employee->personal_email;
         $account->save();
 
-        return redirect('employees')->withErrors($validator, 'updateEmployee')->withInput($request->only('edit_personal_email', 'edit_first_name', 'edit_middle_name', 'edit_last_name', 'edit_address', 'edit_account_type'))->with('employee_id', $employee->id);
+        $message = $employee->first_name . "'s record has been updated.";
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**

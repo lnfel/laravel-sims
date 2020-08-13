@@ -29,6 +29,10 @@
   	<!-- Dynamic Table Full Pagination -->
     {{-- $response->json() --}}
     <!-- <span>Status: </span> -->{{-- $response->status() --}}
+    @if(session('success'))
+    <div id="notify" data-type="success"></div>
+    <!-- <button type="button" class="js-notify btn btn-sm btn-alt-success" data-type="success" data-icon="fa fa-check" data-message="App was updated successfully to 1.2 version">Success</button> -->
+    @endif
     <div class="block">
       <!-- <div class="block-header block-header-default">
           <h3 class="block-title">Dynamic Table <small>Full pagination</small></h3>
