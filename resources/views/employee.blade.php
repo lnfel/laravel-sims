@@ -29,6 +29,7 @@
   	<!-- Dynamic Table Full Pagination -->
     {{-- $response->json() --}}
     <!-- <span>Status: </span> -->{{-- $response->status() --}}
+    
     @if(session('success'))
     <div id="notify" data-type="success"></div>
     <!-- <button type="button" class="js-notify btn btn-sm btn-alt-success" data-type="success" data-icon="fa fa-check" data-message="App was updated successfully to 1.2 version">Success</button> -->
@@ -38,6 +39,22 @@
           <h3 class="block-title">Dynamic Table <small>Full pagination</small></h3>
       </div> -->
       <div class="block-content block-content-full">
+        <form action="{{ route('employees.index') }}" method="get">
+            <div class="form-group row">
+                <div class="col-md-2">
+                    <div class="form-material form-material-primary floating open">
+                        <select id="view" class="form-control" name="view">
+                            <option hidden="">-- Select filter --</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="all">All</option>
+                        </select>
+                        <label for="">Status</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <!-- DataTables functionality is initialized with .js-dataTable-full-pagination class in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
         <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
           <thead>
@@ -45,31 +62,40 @@
               <th class="text-center">Employee number</th>
               <th>Name</th>
               <th class="d-none d-sm-table-cell">Email</th>
-              <th class="d-none d-sm-table-cell" style="width: 15%;">Access</th>
-              <th class="text-center" style="width: 15%;">Profile</th>
+              <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
+              <th class="text-center" style="width: 15%;">Action</th>
             </tr>
           </thead>
           <tbody>
             @forelse($employees as $account)
           	<tr>
                 <td class="text-center">{{ $account->employee->number }}</td>
-                <td class="font-w600"><a class="link-effect" href="#">{{ $account->employee->first_name }} {{ $account->employee->last_name }}</a></td>
+                <td class="font-w600"><a class="link-effect" href="{{ route('employees.show', $account->employee_id) }}">{{ $account->employee->first_name }} {{ $account->employee->last_name }}</a></td>
                 <td class="d-none d-sm-table-cell">{{ $account->employee->personal_email }}</td>
                 <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-success">{{ $account->status->name }}</span>
+                    <span class="badge badge-{{ $account->status->name == 'Active' ? 'success' : 'danger' }}">{{ $account->status->name }}</span>
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-target="#update-employee">
-                        <i class="fa fa-edit"></i>
-                    </button>
-                	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee">
-                        <i class="fa fa-times"></i>
-                    </button>
+                    @if($account->status->name == 'Active')
+                        <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-target="#update-employee" title="Edit">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee" title="Delete">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    @else
+                        <form id="restore" action="{{ route('employees.restore', $account->employee->id) }}" method="post">
+                            @csrf
+                        </form>
+                        <button form="restore" class="btn btn-success mb-5" title="Restore">
+                            <i class="fa fa-undo"></i>
+                        </button>
+                    @endif
                 </td>
             </tr>
             @empty
             <tr>
-                <td>{{ __('No employees found on database.') }}</td>
+                <td class="text-center">{{ __('No employees found on database.') }}</td>
             </tr>
             @endforelse
           </tbody>
@@ -103,23 +129,24 @@
         @csrf
         <h5 class="mb-1">Account Info</h5>
         <div class="form-group row mb-4">
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
-                    <input id="number" type="text" class="form-control" name="number" value="{{ $new_username ?? date('Ymd').'01' }}" readonly="" style="background-color: #f0f2f5;">
+                    <input id="number" type="text" class="form-control" name="number" value="{{-- $new_username ?? date('Ymd').'01' --}}" readonly="" style="background-color: #f0f2f5;">
                     <label for="number">Employee and Account number</label>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{($errors->storeEmployee->first('account_type') ? ' form-error store' : '')}} floating open">
                     <select class="form-control" id="account_type" name="account_type" value="">
-                        <option hidden="" value="{{ null }}">-- Select Role --</option>
+                        <option value="3" selected="">Employee</option>
+                        <!-- <option hidden="" value="{{-- null --}}">-- Select Role --</option>
                         @forelse($account_types as $type)
-                            <option value="{{ $type->id }}" {{ old('account_type') == $type->id ? 'selected' : '' }}>
-                                {{ $type->name }}
+                            <option value="{{-- $type->id --}}" {{-- old('account_type') == $type->id ? 'selected' : '' --}}>
+                                {{-- $type->name --}}
                             </option>
                         @empty
-                            <option disabled="">{{ __('No account types found on database.') }}</option>
-                        @endforelse
+                            <option disabled="">{{-- __('No account types found on database.') --}}</option>
+                        @endforelse -->
                     </select>
                     <label for="account_type">Account Type</label>
                     <span class="invalid-feedback" role="alert">
@@ -252,12 +279,12 @@
         @method('PATCH')
         <h5 class="mb-1">Account Info</h5>
         <div class="form-group row mb-4">
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="form-material form-material-primary floating">
                     <input id="edit-number" type="text" class="form-control" name="edit_number" value="{{ old('edit_number') }}" style="background-color: #f0f2f5;">
                     <label for="number">Employee number</label>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-4">
                 <div class="form-material form-material-primary {{ $errors->updateEmployee->first('edit_account_type') ? 'form-error update' : '' }} floating">
                     <select class="form-control" id="" name="edit_account_type">

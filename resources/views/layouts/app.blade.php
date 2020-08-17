@@ -478,6 +478,9 @@
         // disable address listeners for edit
         var checked = false;
         $.fn.toggleAddressEdit(checked);
+
+        // clear Employee name on delete confirmation modal
+        $('#employee').find('b').text('');
       });
 
       $('#toggleAddressEdit').on('change', function(e) {
@@ -490,8 +493,18 @@
         $(this).removeClass('form-error').children('span').html("");
       });
 
+      // when view filter is changed, submit form request
+      $('#view').on('change', function() {
+        this.form.submit();
+      });
+
       // initialize Codebade notify plugin
-      jQuery(function(){ Codebase.helpers('notify'); });
+      jQuery(function(){ 
+        Codebase.helpers('notify');
+        //Helpers.coreBootstrapTooltip();
+
+        $('[data-toggle="tooltip"]').tooltip();
+      });
 
       console.log("jQuery ready");
 
