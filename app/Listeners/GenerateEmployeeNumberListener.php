@@ -52,10 +52,8 @@ class GenerateEmployeeNumberListener
 
         if ($new_username != null) {
             $event->employee->number = $new_username;
-            $event->account->username = $event->employee->number;
         } else {
             $event->employee->number = date('Ymd').'01';
-            $event->account->username = $event->employee->number;
         }
     }
 }

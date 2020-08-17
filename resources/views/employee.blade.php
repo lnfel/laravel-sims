@@ -67,25 +67,32 @@
             </tr>
           </thead>
           <tbody>
-            @forelse($employees as $account)
+            @forelse($employees as $employee)
           	<tr>
-                <td class="text-center">{{ $account->employee->number }}</td>
-                <td class="font-w600"><a class="link-effect" href="{{ route('employees.show', $account->employee_id) }}">{{ $account->employee->first_name }} {{ $account->employee->last_name }}</a></td>
-                <td class="d-none d-sm-table-cell">{{ $account->employee->personal_email }}</td>
+                <td class="text-center">{{ $employee->number }}</td>
+                <td class="font-w600"><a class="link-effect" href="{{ route('employees.show', $employee->id) }}">{{ $employee->first_name }} {{ $employee->last_name }}</a></td>
+                <td class="d-none d-sm-table-cell">{{ $employee->personal_email }}</td>
                 <td class="d-none d-sm-table-cell">
-                    <span class="badge badge-{{ $account->status->name == 'Active' ? 'success' : 'danger' }}">{{ $account->status->name }}</span>
+                    @if($employee->deleted_at == null)
+                        <span class="badge badge-success">
+                            {{ __('Active') }}
+                        </span>
+                    @else
+                        <span class="badge badge-danger">{{ __('Inactive') }}</span>
+                    @endif
                 </td>
                 <td class="text-center">
-                    @if($account->status->name == 'Active')
-                        <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-target="#update-employee" title="Edit">
+                    @if($employee->deleted_at == null)
+                        <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-target="#update-employee" title="Edit">
                             <i class="fa fa-edit"></i>
                         </button>
-                    	<button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $account->employee_id }}" data-full-name="{{ $account->employee->first_name }} {{ $account->employee->last_name }}" data-target="#destroy-employee" title="Delete">
+                        <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy-employee" title="Delete">
                             <i class="fa fa-trash"></i>
                         </button>
                     @else
-                        <form id="restore" action="{{ route('employees.restore', $account->employee->id) }}" method="post">
+                        <form id="restore" action="{{ route('employees.restore', $employee->id) }}" method="post">
                             @csrf
+                            <input type="hidden" name="employee_id">
                         </form>
                         <button form="restore" class="btn btn-success mb-5" title="Restore">
                             <i class="fa fa-undo"></i>
@@ -95,7 +102,9 @@
             </tr>
             @empty
             <tr>
-                <td class="text-center">{{ __('No employees found on database.') }}</td>
+                <td class="text-center text-danger" colspan="5">
+                    {{ __('No employees found on database.') }}
+                </td>
             </tr>
             @endforelse
           </tbody>

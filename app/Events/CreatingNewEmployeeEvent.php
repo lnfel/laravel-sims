@@ -15,17 +15,15 @@ class CreatingNewEmployeeEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $employee;
-    public $account;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($employee, $account)
+    public function __construct($employee)
     {
         $this->employee = $employee;
-        $this->account = $account;
     }
 
     /**

@@ -32,7 +32,8 @@ class Employee extends Controller
      */
     public function index(Request $request)
     {
-        // Check if a record exists on employees table
+        // Check if a record exists on account and employees table
+        $accountExists = \App\Account::exists();
         $employeeExists = \App\Employee::exists();
 
         $user = Auth::user();
@@ -42,36 +43,29 @@ class Employee extends Controller
           $account_types = \App\AccountType::whereNotIn('name', ['Super Admin', 'Administrator'])->get();
         }
 
-        //$response = Http::get('http://bkintanar.site/api/regions');
-
         $regions = DB::table('philippine_regions')->get();
-        //$provinces = DB::table('philippine_provinces')->get();
-        //$cities = DB::table('philippine_cities')->get();
-        //$barangays = DB::table('philippine_barangays')->get();
-        //, 'provinces', 'cities', 'barangays'
 
-        if ($employeeExists) {
-            // Account::get() will also work since laravel will hide soft deleted accounts
+        if ($accountExists) {
             $view = $request->query('view', 'active');
             switch ($view) {
                 case 'all':
-                    $employees = Account::withTrashed()->with('employee')->get();
+                    $employees = EmployeeModel::withTrashed()->get();
                     break;
                 
                 case 'inactive':
-                    $employees = Account::onlyTrashed()->with('employee')->get();
+                    $employees = EmployeeModel::onlyTrashed()->get();
                     break;
 
                 default:
-                    $employees = Account::whereNull('deleted_at')->with('employee')->get();
+                    // Employee::get() will also work for 'active' since laravel will hide soft deleted Employees
+                    $employees = EmployeeModel::whereNull('deleted_at')->get();
                     break;
             }
         }
 
-        $employee = [];
         $data = $request->session()->all();
         
-        return view('employee', compact('user', 'regions', 'account_types', 'employee', 'employees', 'data'));
+        return view('employee', compact('user', 'regions', 'account_types', 'employees', 'data'));
     }
 
     /**
@@ -127,7 +121,8 @@ class Employee extends Controller
 
         $employee = new \App\Employee();
         $account = new \App\Account();
-        CreatingNewEmployeeEvent::dispatch($employee, $account);
+        //CreatingNewEmployeeEvent::dispatch($employee, $account);
+        CreatingNewEmployeeEvent::dispatch($employee);
         //event(new CreatingNewEmployeeEvent($employee));
         
         //$employee->number = request('number');
@@ -144,11 +139,11 @@ class Employee extends Controller
         $employee->save();
 
         //$account->username = request('number');
-        $account->password = Hash::make('mmm');
+        /*$account->password = Hash::make('mmm');
         $account->email = $employee->personal_email;
         $account->account_type_id = request('account_type');
         $account->employee()->associate($employee);
-        $account->save();
+        $account->save();*/
 
         $message = $employee->first_name . ' has been registered as ' . $account->account_type->name;
 
@@ -261,19 +256,21 @@ class Employee extends Controller
 
     public function softDelete(Request $request, EmployeeModel $employee)
     {
-        $account = Account::where('employee_id', $employee->id)->first();
+        /*$account = Account::where('employee_id', $employee->id)->first();
         $account->status_id = 2;
         $account->save();
-        $employee->account->delete();
+        $employee->account->delete();*/
+        $employee->delete();
         return redirect()->route('employees.index');
     }
 
-    public function restore(Request $request, EmployeeModel $employee)
+    public function restore(Request $request, $employee)
     {
-        $account = Account::onlyTrashed()->where('employee_id', $employee->id)->first();
+        /*$account = Account::onlyTrashed()->where('employee_id', $employee->id)->first();
         $account->status_id = 1;
         $account->save();
-        $account->restore();
+        $account->restore();*/
+        EmployeeModel::withTrashed()->where('id', $employee)->restore();
         return redirect()->route('employees.index');
     }
 }
