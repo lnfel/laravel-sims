@@ -24,7 +24,8 @@
                     <button form="{{ $formId }}" class="btn btn-warning btn-noborder">
                         Confirm
                     </button>
-                    <button form="{{ $formId }}" class="btn btn-primary btn-noborder" data-toggle="modal" data-target="#destroy-employee">
+                    <!-- adding type="button" acts like preventDefault() -->
+                    <button type="button" form="{{ $formId }}" class="btn btn-primary btn-noborder" data-toggle="modal" data-target="#destroy-employee">
                         Cancel
                     </button>
                 @endif

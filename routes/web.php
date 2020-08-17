@@ -91,3 +91,4 @@ Route::resources([
 ]);
 
 Route::delete('/employees/{employee}', 'Employee@softDelete')->name('employees.soft-delete');
+Route::post('/employees/{employee}', 'Employee@restore')->name('employees.restore');

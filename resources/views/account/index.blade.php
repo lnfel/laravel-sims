@@ -154,7 +154,7 @@
 	@foreach($accounts_on_type as $type)
 	<div class="col-12 col-md-3">
 		<div class="block">
-			<div class="block-header block-header-default">
+			<div class="block-header block-header-default {{ $type->accounts ? 'bg-success' : 'bg-danger' }}">
 				<h3 class="block-title">{{ $type->name }}</h3>
 			</div>
 			<div class="block-content block-content-full">
@@ -186,16 +186,23 @@
 	@foreach($status as $status)
 	<div class="col-6">
 		<div class="block">
-			<div class="block-header block-header-default">
+			<div class="block-header block-header-default {{ $status->name == 'Active' ? 'bg-success' : 'bg-danger' }}">
 				<h3 class="block-title">{{ $status->name }}</h3>
 			</div>
 			<div class="block-content block-content-full">
 				<span><b>Accounts</b></span>
 				<ul>
 					@forelse($status->accounts as $account)
-						<li>{{ $account->username }}</li>
+						<li>{{ $account->employee->first_name }} - {{ $account->username }}</li>
 					@empty
-						<li>There is no account with {{ $status->name }} status.</li>
+						<!-- <li>There is no account with {{-- $status->name --}} status.</li> -->
+						@forelse($employees as $employee)
+							<li class="{{ $employee->account ? 'd-none' : '' }}">
+								{{ $employee->account ? '' : $employee->first_name }}
+							</li>
+						@empty
+
+						@endforelse
 					@endforelse
 				</ul>
 			</div>

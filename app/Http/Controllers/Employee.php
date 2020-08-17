@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Validator;
 use Carbon\Carbon;
+use App\Events\CreatingNewEmployeeEvent;
 
 class Employee extends Controller
 {
@@ -31,29 +32,8 @@ class Employee extends Controller
      */
     public function index(Request $request)
     {
-        // Check if a record exists on accounts table
-        $accountExists = \App\Account::exists();
+        // Check if a record exists on employees table
         $employeeExists = \App\Employee::exists();
-        $now = Carbon::now('utc')->toDateString();
-
-        if ($accountExists) {
-          // Get latest or last username created
-          $last_username = \App\Account::latest('created_at')->first()->username;
-          // Increment last username value
-          // Note that php already coerce string to int conversion when doing this
-          // In cases we want to explicitly convert the type:
-          // we can cast it Ex. (int)$last_username 
-          if (\App\Account::latest('created_at')->first()->created_at->toDateString() == $now) {
-            // if latest account is created today, increment it
-            $new_username = $last_username + 1;
-          } else {
-            // generate id using date today
-            $new_username = date("Ymd") . '01';
-          }
-        } else {
-          $last_username = null;
-          $new_username = null;
-        }
 
         $user = Auth::user();
         if ($user->isAdmin()) {
@@ -71,13 +51,27 @@ class Employee extends Controller
         //, 'provinces', 'cities', 'barangays'
 
         if ($employeeExists) {
-            $employees = Account::where('status_id', 1)->with('employee')->get();
+            // Account::get() will also work since laravel will hide soft deleted accounts
+            $view = $request->query('view', 'active');
+            switch ($view) {
+                case 'all':
+                    $employees = Account::withTrashed()->with('employee')->get();
+                    break;
+                
+                case 'inactive':
+                    $employees = Account::onlyTrashed()->with('employee')->get();
+                    break;
+
+                default:
+                    $employees = Account::whereNull('deleted_at')->with('employee')->get();
+                    break;
+            }
         }
 
         $employee = [];
         $data = $request->session()->all();
         
-        return view('employee', compact('user', 'regions', 'last_username', 'new_username', 'account_types', 'employee', 'employees', 'data'));
+        return view('employee', compact('user', 'regions', 'account_types', 'employee', 'employees', 'data'));
     }
 
     /**
@@ -98,20 +92,8 @@ class Employee extends Controller
      */
     public function store(Request $request)
     {
-        /*$dataEmployee = request()->validate([
-            'number' => 'required',
-            'account_type' => [
-                'required',
-                Rule::notIn([0]),
-            ],
-            'first_name' => 'required|alpha',
-            'last_name' => 'required|alpha',
-            'middle_name' => 'required|alpha',
-            'employee_email' => 'required|email',
-        ]);*/
-
         $validator = Validator::make($request->all(), [
-            'number' => 'required',
+            //'number' => 'required',
             'account_type' => [
                 'required',
                 Rule::notIn([0]),
@@ -144,7 +126,11 @@ class Employee extends Controller
         }
 
         $employee = new \App\Employee();
-        $employee->number = request('number');
+        $account = new \App\Account();
+        CreatingNewEmployeeEvent::dispatch($employee, $account);
+        //event(new CreatingNewEmployeeEvent($employee));
+        
+        //$employee->number = request('number');
         $employee->first_name = request('first_name');
         $employee->last_name = request('last_name');
         $employee->middle_name = request('middle_name');
@@ -157,8 +143,7 @@ class Employee extends Controller
         $employee->zip_code = request('zip_code');
         $employee->save();
 
-        $account = new Account();
-        $account->username = request('number');
+        //$account->username = request('number');
         $account->password = Hash::make('mmm');
         $account->email = $employee->personal_email;
         $account->account_type_id = request('account_type');
@@ -276,7 +261,19 @@ class Employee extends Controller
 
     public function softDelete(Request $request, EmployeeModel $employee)
     {
+        $account = Account::where('employee_id', $employee->id)->first();
+        $account->status_id = 2;
+        $account->save();
         $employee->account->delete();
-        return redirect()->back();
+        return redirect()->route('employees.index');
+    }
+
+    public function restore(Request $request, EmployeeModel $employee)
+    {
+        $account = Account::onlyTrashed()->where('employee_id', $employee->id)->first();
+        $account->status_id = 1;
+        $account->save();
+        $account->restore();
+        return redirect()->route('employees.index');
     }
 }
