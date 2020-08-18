@@ -45,7 +45,7 @@ class Employee extends Controller
 
         $regions = DB::table('philippine_regions')->get();
 
-        if ($accountExists) {
+        if ($employeeExists) {
             $view = $request->query('view', 'active');
             switch ($view) {
                 case 'all':
@@ -264,7 +264,7 @@ class Employee extends Controller
         return redirect()->route('employees.index');
     }
 
-    public function restore(Request $request, $employee)
+    public function restore($employee)
     {
         /*$account = Account::onlyTrashed()->where('employee_id', $employee->id)->first();
         $account->status_id = 1;

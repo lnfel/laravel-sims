@@ -26,9 +26,9 @@ use Illuminate\Support\Facades\Route;
 
 //Route::get('/', 'Site@index')->name('/');
 
-Route::get('/account-test', 'Account@index');
-Route::post('/account-test', 'Account@store');
-Route::post('/employee-test', 'Account@storeEmployee');
+Route::get('/account-test', 'AccountTest@index');
+Route::post('/account-test', 'AccountTest@store');
+Route::post('/employee-test', 'AccountTest@storeEmployee');
 
 // Routes for default login and register of laravel-ui
 //Auth::routes(['register' => false]);
@@ -92,3 +92,10 @@ Route::resources([
 
 Route::delete('/employees/{employee}', 'Employee@softDelete')->name('employees.soft-delete');
 Route::post('/employees/{employee}', 'Employee@restore')->name('employees.restore');
+
+Route::resources([
+  'accounts' => 'Account',
+]);
+
+Route::delete('/accounts/{account}', 'Account@softDelete')->name('accounts.soft-delete');
+Route::post('/accounts/{account}', 'Account@restore')->name('accounts.restore');

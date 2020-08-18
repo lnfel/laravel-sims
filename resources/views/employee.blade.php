@@ -92,7 +92,6 @@
                     @else
                         <form id="restore" action="{{ route('employees.restore', $employee->id) }}" method="post">
                             @csrf
-                            <input type="hidden" name="employee_id">
                         </form>
                         <button form="restore" class="btn btn-success mb-5" title="Restore">
                             <i class="fa fa-undo"></i>
