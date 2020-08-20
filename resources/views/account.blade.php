@@ -43,6 +43,7 @@
                             <option hidden="">-- Select filter --</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
+                            <option value="no-account">No account</option>
                             <option value="all">All</option>
                         </select>
                         <label for="">Status</label>

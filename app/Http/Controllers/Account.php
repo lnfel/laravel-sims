@@ -46,6 +46,10 @@ class Account extends Controller
                     //return view('account', compact('user', 'employees'))->with('view', 'inactive');
                     break;
 
+                case 'no-account':
+                    $employees = Employee::where('account_id', null)->get();
+                    break;
+
                 default:
                     // Employee::get() will also work for 'active' since laravel will hide soft deleted Employees
                     $employees = Employee::where('account_id', '!=', null)->whereHas('account', function($query) {
