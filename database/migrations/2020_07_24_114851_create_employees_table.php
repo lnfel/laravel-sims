@@ -16,6 +16,8 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('number')->unique();
+            $table->unsignedBigInteger('account_id')->nullable();
+            $table->foreign('account_id')->references('id')->on('accounts');
             $table->unsignedBigInteger('employee_type_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
             $table->string('position')->nullable();

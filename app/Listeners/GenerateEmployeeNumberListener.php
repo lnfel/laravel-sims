@@ -31,14 +31,14 @@ class GenerateEmployeeNumberListener
         $employeeExists = \App\Employee::exists();
         $now = Carbon::now('utc')->toDateString();
 
-        if ($accountExists) {
+        if ($employeeExists) {
             // Get latest or last username created
-            $last_username = \App\Account::latest('created_at')->first()->username;
+            $last_username = \App\Employee::latest('created_at')->first()->number;
             // Increment last username value
             // Note that php already coerce string to int conversion when doing this
             // In cases we want to explicitly convert the type:
             // we can cast it Ex. (int)$last_username 
-            if (\App\Account::latest('created_at')->first()->created_at->toDateString() == $now) {
+            if (\App\Employee::latest('created_at')->first()->created_at->toDateString() == $now) {
                 // if latest account is created today, increment it
                 $new_username = $last_username + 1;
             } else {

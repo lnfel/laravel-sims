@@ -6,6 +6,7 @@ use App\Account as AccountModel;
 use App\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Account extends Controller
 {
@@ -24,11 +25,40 @@ class Account extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $employeeExists = \App\Employee::exists();
 
-        return view('account', compact('user'));
+        if ($employeeExists) {
+            $view = $request->query('view', 'active');
+            switch ($view) {
+                case 'all':
+                    $employees = Employee::get();
+                    return view('account', compact('user', 'employees'))->with('view', 'all');
+                    break;
+                
+                case 'inactive':
+                    $employees = Employee::where('account_id', '!=', null)->whereDoesntHave('account', function($query) {
+                        $query->where('deleted_at', '=', null);
+                    })->get();
+                    //dd($employees);
+                    return view('account', compact('user', 'employees'))->with('view', 'inactive');
+                    break;
+
+                default:
+                    // Employee::get() will also work for 'active' since laravel will hide soft deleted Employees
+                    $employees = Employee::where('account_id', '!=', null)->whereHas('account', function($query) {
+                        $query->where('deleted_at', '=', null);
+                    })->get();
+                    return view('account', compact('user', 'employees'))->with('view', 'active');
+                    break;
+            }
+        }
+
+        //$employees = \App\Employee::get();
+        $deletedAccounts = \App\Account::onlyTrashed()->get();
+        $accountTypes = \App\AccountType::get();
     }
 
     /**

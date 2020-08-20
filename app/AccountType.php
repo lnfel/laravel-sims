@@ -11,6 +11,6 @@ class AccountType extends Model
   ];
 
   public function accounts() {
-  	return $this->hasMany('App\Account');
+  	return $this->hasMany('App\Account')->withTrashed();
   }
 }

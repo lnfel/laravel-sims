@@ -145,7 +145,7 @@ class Employee extends Controller
         $account->employee()->associate($employee);
         $account->save();*/
 
-        $message = $employee->first_name . ' has been registered as ' . $account->account_type->name;
+        $message = $employee->first_name . ' has been registered as Employee.';
 
         //$message = "sample message";
 
@@ -173,7 +173,7 @@ class Employee extends Controller
     {
         $data = [];
         $data['employee'] = $employee->toArray();
-        $data['account'] = \App\Account::where('employee_id', $employee->id)->get()->toArray();
+       // $data['account'] = \App\Account::where('employee_id', $employee->id)->get()->toArray();
 
         return json_encode($data);
     }

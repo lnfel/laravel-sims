@@ -55,15 +55,39 @@
         <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
           <thead>
             <tr>
-              <th class="text-center">Employee number</th>
+              <th class="text-center">Number</th>
               <th>Name</th>
               <th class="d-none d-sm-table-cell">Email</th>
+              <th class="d-none d-sm-table-cell">Role</th>
               <th class="d-none d-sm-table-cell" style="width: 15%;">Status</th>
               <th class="text-center" style="width: 15%;">Action</th>
             </tr>
           </thead>
           <tbody>
-            
+          	@foreach($employees as $employee)
+        		<tr>
+        			<td class="text-center">{{ $employee->number }}</td>
+        			<td>{{ $employee->first_name }} {{ $employee->last_name }}</td>
+        			<td>{{ $employee->personal_email }}</td>
+        			@if($employee->account_id != null)
+	        			<td>{{ $employee->account->account_type->name }}</td>
+	        			<td>
+	        				<span class="badge badge-{{ $employee->account->status->name == 'Active' ? 'success' : 'danger' }}">
+	        					{{ $employee->account->status->name }}
+	        				</span>
+	        			</td>
+	        			@if($employee->account->deleted_at == null)
+	        				<td>Edit Account</td>
+	        			@else
+	        				<td>Restore Account</td>
+	        			@endif
+        			@else
+      					<td>N/A</td>
+      					<td><span class="badge badge-info">No Account</span></td>
+        				<td>Create Account</td>
+        			@endif
+        		</tr>
+            @endforeach
           </tbody>
         </table>
       </div>

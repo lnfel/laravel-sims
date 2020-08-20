@@ -185,20 +185,20 @@
           dataType: "json",
           success: function(data) {
             console.log("Current Employee Data");
-            console.table(data['account'], ["id", "username", "email", "account_type_id"]);
+            //console.table(data['account'], ["id", "username", "email", "account_type_id"]);
             console.table(data['employee'], ["id", "number", "first_name", "last_name", "address", "personal_email"]);
-            console.log("Account Type ID");
-            console.log(data['account'][0]['account_type_id']);
+            //console.log("Account Type ID");
+            //console.log(data['account'][0]['account_type_id']);
 
-            $('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
-            $('#edit-number').val(data['employee']['number']);
-            $('#edit-number').prop('readonly', true);
+            //$('#edit-number').prop('readonly', false).parent('.form-material').addClass('open');
+            //$('#edit-number').val(data['employee']['number']);
+            //$('#edit-number').prop('readonly', true);
 
             $('#edit-employee').prop('action', '/employees/' + data['employee']['id']);
             //$('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee']['id'] +'">');
 
             // Account Info
-            $('#edit-employee').find('select[name="edit_account_type"]').val(data['account'][0]['account_type_id']).trigger('change');
+            $('#edit-employee').find('select[name="edit_account_type"]').val(3).trigger('change');
             $('#edit-employee').find('input[name="edit_personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
 
             // Personal Info
@@ -213,7 +213,7 @@
             console.log("Employee request done, checking for address...");
             console.log(data.responseJSON['employee']);
             var employee = data.responseJSON['employee'];
-            var account = data.responseJSON['account'];
+            //var account = data.responseJSON['account'];
             console.log('Looking for region data...');
             console.log(employee['region']);
             if (employee['region'] == null && employee['address'] == null) {
