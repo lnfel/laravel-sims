@@ -55,7 +55,7 @@ class Account extends Authenticatable
     }
 
     public function employee() {
-        return $this->belongsTo('App\Employee')->withDefault();
+        return $this->belongsTo('App\Employee')->withTrashed();
     }
 
     // check if logged in user is an Admin

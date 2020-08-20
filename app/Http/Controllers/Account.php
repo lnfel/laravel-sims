@@ -34,8 +34,8 @@ class Account extends Controller
             $view = $request->query('view', 'active');
             switch ($view) {
                 case 'all':
-                    $employees = Employee::get();
-                    return view('account', compact('user', 'employees'))->with('view', 'all');
+                    $employees = Employee::all();
+                    //return view('account', compact('user', 'employees'))->with('view', 'all');
                     break;
                 
                 case 'inactive':
@@ -43,7 +43,7 @@ class Account extends Controller
                         $query->where('deleted_at', '=', null);
                     })->get();
                     //dd($employees);
-                    return view('account', compact('user', 'employees'))->with('view', 'inactive');
+                    //return view('account', compact('user', 'employees'))->with('view', 'inactive');
                     break;
 
                 default:
@@ -51,14 +51,12 @@ class Account extends Controller
                     $employees = Employee::where('account_id', '!=', null)->whereHas('account', function($query) {
                         $query->where('deleted_at', '=', null);
                     })->get();
-                    return view('account', compact('user', 'employees'))->with('view', 'active');
+                    //return view('account', compact('user', 'employees'))->with('view', 'active');
                     break;
             }
         }
-
-        //$employees = \App\Employee::get();
-        $deletedAccounts = \App\Account::onlyTrashed()->get();
-        $accountTypes = \App\AccountType::get();
+        
+        return view('account', compact('user', 'employees'));
     }
 
     /**
