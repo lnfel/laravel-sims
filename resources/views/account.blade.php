@@ -78,14 +78,35 @@
 	        				</span>
 	        			</td>
 	        			@if($employee->account->deleted_at == null)
-	        				<td>Edit Account</td>
+	        				<td class="text-center">
+	        					<button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-target="#update" title="Edit">
+                    	<i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy" title="Delete">
+                    	<i class="fa fa-trash"></i>
+                    </button>
+	        				</td>
 	        			@else
-	        				<td>Restore Account</td>
+	        				<td class="text-center">
+	        					<form id="restore" action="{{ route('accounts.restore', $employee->account->id) }}" method="post">
+                    	@csrf
+                    </form>
+                    <button form="restore" class="btn btn-success mb-5" title="Restore">
+                    	<i class="fa fa-undo"></i>
+                    </button>
+	        				</td>
 	        			@endif
         			@else
       					<td>N/A</td>
       					<td><span class="badge badge-info">No Account</span></td>
-        				<td>Create Account</td>
+        				<td class="text-center">
+        					<form id="create" action="{{ route('accounts.store') }}" method="post">
+        						@csrf
+        					</form>
+        					<button form="create" class="btn btn-outline-info mr-5 mb-5" title="Create">
+                  	<i class="fa fa-user-plus"></i>
+                  </button>
+        				</td>
         			@endif
         		</tr>
             @endforeach

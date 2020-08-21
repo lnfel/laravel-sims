@@ -51,7 +51,6 @@ class Account extends Controller
                     break;
 
                 default:
-                    // Employee::get() will also work for 'active' since laravel will hide soft deleted Employees
                     $employees = Employee::where('account_id', '!=', null)->whereHas('account', function($query) {
                         $query->where('deleted_at', '=', null);
                     })->get();
@@ -81,7 +80,7 @@ class Account extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

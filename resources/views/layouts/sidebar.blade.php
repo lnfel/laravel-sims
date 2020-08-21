@@ -92,7 +92,7 @@
                     <span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">Admin</span>
                 </li>
                 <li>
-                    <a href="#"><i class="si si-people"></i><span class="sidebar-mini-hide">Account Management</span></a>
+                    <a href="{{ route('accounts.index') }}""><i class="si si-people"></i><span class="sidebar-mini-hide">Account Management</span></a>
                 </li>
                 <li>
                     <a class="nav-submenu" data-toggle="nav-submenu" href="#">
