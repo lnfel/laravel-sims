@@ -263,7 +263,7 @@ class Employee extends Controller
         $account->save();
         $employee->account->delete();*/
         $employee->delete();
-        return redirect()->route('employees.index');
+        return redirect()->route('employees.index')->with('danger', $employee->first_name . "'s record was deleted.");
     }
 
     public function restore($employee)
@@ -272,7 +272,8 @@ class Employee extends Controller
         $account->status_id = 1;
         $account->save();
         $account->restore();*/
-        EmployeeModel::withTrashed()->where('id', $employee)->restore();
-        return redirect()->route('employees.index');
+        $employee = EmployeeModel::withTrashed()->where('id', $employee)->first();
+        $employee->restore();
+        return redirect()->route('employees.index')->with('success', $employee->first_name . "'s record was restored.");
     }
 }

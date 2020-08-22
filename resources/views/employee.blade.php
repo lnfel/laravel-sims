@@ -30,10 +30,12 @@
     {{-- $response->json() --}}
     <!-- <span>Status: </span> -->{{-- $response->status() --}}
     
-    @if(session('success'))
-    <div id="notify" data-type="success"></div>
-    <!-- <button type="button" class="js-notify btn btn-sm btn-alt-success" data-type="success" data-icon="fa fa-check" data-message="App was updated successfully to 1.2 version">Success</button> -->
+    @if(session('success') != null)
+        <div id="notify" data-type="success"></div>
+    @elseif(session('success') == null && session('danger') != null)
+        <div id="notify" data-type="danger"></div>
     @endif
+    
     <div class="block">
       <!-- <div class="block-header block-header-default">
           <h3 class="block-title">Dynamic Table <small>Full pagination</small></h3>
@@ -86,7 +88,7 @@
                         <button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-target="#update-employee" title="Edit">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy-employee" title="Delete">
+                        <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-model="employees" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy" title="Delete">
                             <i class="fa fa-trash"></i>
                         </button>
                     @else
@@ -439,13 +441,13 @@
 </x-modal>
 <!-- Update Employee Modal -->
 <!-- Destroy Employee Modal -->
-<x-modal icon="fa fa-times mr-5" title="Delete Employee" modalId="destroy-employee" formId="delete-employee" modalSize="modal-sm" yesOrNo="true">
-    <form id="delete-employee" action="" method="post">
+<x-modal icon="fa fa-times mr-5" title="Delete Employee" modalId="destroy" formId="delete" modalSize="modal-sm" yesOrNo="true">
+    <form id="delete" action="" method="post">
         @csrf
         @method('DELETE')
         <div class="form-group row" style="font-size: 1.142857rem;">
             <div class="col">
-                You are about to delete record of: <br><span id="employee"><b></b></span>.
+                You are about to delete record of: <br><span id="name"><b></b></span>.
             </div>
         </div>
     </form>

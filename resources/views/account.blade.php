@@ -26,8 +26,11 @@
   <!-- Hero -->
 	<!-- Page Content -->
   <div class="content">
-    @if(session('success'))
-    <div id="notify" data-type="success"></div>
+
+  	@if(session('success') != null)
+    	<div id="notify" data-type="success"></div>
+    @elseif(session('success') == null && session('danger') != null)
+    	<div id="notify" data-type="danger"></div>
     @endif
 
     <div class="block">
@@ -82,7 +85,7 @@
 	        					<button type="button" class="btn btn-primary mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-target="#update" title="Edit">
                     	<i class="fa fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->id }}" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy" title="Delete">
+                    <button type="button" class="btn btn-danger mr-5 mb-5" data-toggle="modal" data-target-id="{{ $employee->account->id }}" data-model="accounts" data-full-name="{{ $employee->first_name }} {{ $employee->last_name }}" data-target="#destroy" title="Delete">
                     	<i class="fa fa-trash"></i>
                     </button>
 	        				</td>
@@ -118,4 +121,18 @@
   </div>
   <!-- Page Content -->
 </main>
+
+<!-- Destroy Employee Modal -->
+<x-modal icon="fa fa-times mr-5" title="Delete Account" modalId="destroy" formId="delete" modalSize="modal-sm" yesOrNo="true">
+    <form id="delete" action="" method="post">
+        @csrf
+        @method('DELETE')
+        <div class="form-group row" style="font-size: 1.142857rem;">
+            <div class="col">
+                You are about to delete account of: <br><span id="name"><b></b></span>.
+            </div>
+        </div>
+    </form>
+</x-modal>
+<!-- Destroy Employee Modal -->
 @endsection

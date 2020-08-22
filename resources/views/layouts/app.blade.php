@@ -439,11 +439,12 @@
             $("#region").val($("#region").data('old-region')).trigger('change');
           }
         } else {
-          var employee_id = $(e.relatedTarget).data('target-id');
-          var employee_full_name = $(e.relatedTarget).data('full-name');
-          $('#delete-employee').prop('action', '/employees/' + employee_id);
-          $('#delete-employee').prepend('<input type="hidden" name="employee_id" value="'+ employee_id +'">');
-          $('#employee').find("b").html(employee_full_name);
+          var user_id = $(e.relatedTarget).data('target-id');
+          var user_full_name = $(e.relatedTarget).data('full-name');
+          var model = $(e.relatedTarget).data('model');
+          $('#delete').prop('action', '/' + model + '/' + user_id);
+          $('#delete').prepend('<input type="hidden" name="user_id" value="'+ user_id +'">');
+          $('#name').find("b").html(user_full_name);
         }
 
         // Raise the label if modal opened with input having values or form returned old values
@@ -532,8 +533,8 @@
                 align: 'right',             // 'right', 'left', 'center'
                 from: 'top',                // 'top', 'bottom'
                 type: $('#notify').data('type'),               // 'info', 'success', 'warning', 'danger'
-                icon: 'fa fa-check mr-5',    // Icon class
-                message: '{{ session("success") }}'
+                icon: 'fa fa-{{ session("success") ? "check" : "times" }} mr-5',    // Icon class
+                message: '{{ session("success") ?? session("danger") }}'
             });
           });
         }

@@ -152,4 +152,21 @@ class Account extends Controller
     {
         //
     }
+
+    public function softDelete(Request $request, AccountModel $account)
+    {
+        $account->status_id = 2;
+        $account->save();
+        $account->delete();
+        return redirect()->route('accounts.index')->with('danger', $account->employee->first_name . "'s account was deleted.");
+    }
+
+    public function restore($account)
+    {
+        $account = AccountModel::withTrashed()->where('id', $account)->first();
+        $account->status_id = 1;
+        $account->save();
+        $account->restore();
+        return redirect()->route('accounts.index')->with('success', $account->employee->first_name . "'s account was restored.");
+    }
 }
