@@ -25,6 +25,7 @@ class AccountSeeder extends Seeder
     		[
     			'username' => date("Ymd") . '01',
     			'password' => Hash::make('mmm'),
+          'account_type_id' => 1,
     			'employee_id' => 1,
     			'created_at' => $now,
     			'updated_at' => $now

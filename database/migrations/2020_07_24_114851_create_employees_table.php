@@ -18,7 +18,8 @@ class CreateEmployeesTable extends Migration
             $table->string('number')->unique();
             $table->unsignedBigInteger('account_id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts');
-            $table->unsignedBigInteger('employee_type_id')->nullable();
+            $table->unsignedBigInteger('account_type_id')->default(3);
+            $table->foreign('account_type_id')->references('id')->on('account_types');
             $table->unsignedBigInteger('department_id')->nullable();
             $table->string('position')->nullable();
             $table->string('last_name');

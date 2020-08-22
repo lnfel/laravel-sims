@@ -11,6 +11,7 @@ class Employee extends Model
 	
   protected $fillable = [
 		'personal_email',
+		'company_email',
 		'first_name',
 		'middle_name',
 		'last_name',
@@ -24,5 +25,9 @@ class Employee extends Model
 
   public function account() {
   	return $this->hasOne('App\Account')->withTrashed();
+  }
+
+  public function account_type() {
+  	return $this->belongsTo('App\AccountType')->withDefault();
   }
 }

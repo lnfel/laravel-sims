@@ -24,6 +24,7 @@ class EmployeeSeeder extends Seeder
     		[
     			'number' => date("Ymd") . '01',
           'account_id' => 1,
+          'account_type_id' => 1,
     			'last_name' => 'Suzuhara',
     			'first_name' => 'Lulu',
     			'middle_name' => 'S.',

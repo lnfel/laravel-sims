@@ -198,7 +198,7 @@
             //$('#edit-employee').prepend('<input type="hidden" name="employee_id" value="'+ data['employee']['id'] +'">');
 
             // Account Info
-            $('#edit-employee').find('select[name="edit_account_type"]').val(3).trigger('change');
+            $('#edit-employee').find('select[name="edit_account_type"]').val(data['employee']['account_type_id']).trigger('change');
             $('#edit-employee').find('input[name="edit_personal_email"]').val(data['employee']['personal_email']).parent('.form-material').addClass('open');
 
             // Personal Info

@@ -145,7 +145,9 @@ class Employee extends Controller
         $account->employee()->associate($employee);
         $account->save();*/
 
-        $message = $employee->first_name . ' has been registered as Employee.';
+        $role = \App\AccountType::find(request('account_type'));
+
+        $message = $employee->first_name . ' has been registered as ' . $role->name;
 
         //$message = "sample message";
 

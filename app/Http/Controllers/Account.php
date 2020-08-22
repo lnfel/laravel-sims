@@ -7,6 +7,7 @@ use App\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class Account extends Controller
 {
@@ -80,7 +81,31 @@ class Account extends Controller
      */
     public function store(Request $request)
     {
-        
+        $user = Employee::where('id', request('user_id'))->first();
+        // https://stackoverflow.com/questions/1846202/php-how-to-generate-a-random-unique-alphanumeric-string-for-use-in-a-secret-l
+        $password = bin2hex(random_bytes(4));
+        $request->merge(
+            [
+                'username' => $user->number,
+                'password' => Hash::make($password),
+                'email' => $user->company_email,
+                'employee_id' => $user->id,
+                'account_type_id' => $user->account_type_id,
+                'password_text' => utf8_encode($password),
+            ]
+        );
+
+        $account = AccountModel::create($request->except('user_id', 'password_text'));
+
+        $user->account_id = $account->id;
+        $user->save();
+
+        $account->employee()->associate($user);
+        $account->save();
+
+        return back()->with('success', 'Successfully assigned an account to '. $user->first_name .'.');
+        //return $request->all();
+        //return $account->toSql();
     }
 
     /**

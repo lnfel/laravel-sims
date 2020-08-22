@@ -65,11 +65,11 @@
             </tr>
           </thead>
           <tbody>
-          	@foreach($employees as $employee)
+          	@foreach($employees as $key => $employee)
         		<tr>
         			<td class="text-center">{{ $employee->number }}</td>
         			<td>{{ $employee->first_name }} {{ $employee->last_name }}</td>
-        			<td>{{ $employee->personal_email }}</td>
+        			<td>{{ $employee->company_email }}</td>
         			@if($employee->account_id != null)
 	        			<td>{{ $employee->account->account_type->name }}</td>
 	        			<td>
@@ -97,13 +97,14 @@
 	        				</td>
 	        			@endif
         			@else
-      					<td>N/A</td>
+      					<td>{{ $employee->account_type->name }}</td>
       					<td><span class="badge badge-info">No Account</span></td>
         				<td class="text-center">
-        					<form id="create" action="{{ route('accounts.store') }}" method="post">
+        					<form id="create{{ $key+1 }}" action="{{ route('accounts.store') }}" method="post">
         						@csrf
+        						<input type="hidden" name="user_id" value="{{ $employee->id }}">
         					</form>
-        					<button form="create" class="btn btn-outline-info mr-5 mb-5" title="Create">
+        					<button form="create{{ $key+1 }}" class="btn btn-outline-info mr-5 mb-5" title="Create">
                   	<i class="fa fa-user-plus"></i>
                   </button>
         				</td>

@@ -13,4 +13,8 @@ class AccountType extends Model
   public function accounts() {
   	return $this->hasMany('App\Account')->withTrashed();
   }
+
+  public function employees() {
+  	return $this->hasMany('App\Employee')->withTrashed();
+  }
 }
